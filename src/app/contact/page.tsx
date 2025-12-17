@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/layout/Navbar"
-import { Mail, MessageCircle, MapPin } from "lucide-react"
+import { Mail, MessageCircle, MapPin, Sparkles } from "lucide-react"
+import { ParticleBackground } from "@/components/ui/ParticleBackground"
 
 export const metadata = {
     title: "Contact Us | Hello World Classes",
@@ -8,55 +9,57 @@ export const metadata = {
 
 export default function ContactPage() {
     return (
-        <div className="min-h-screen bg-white">
+        <div className="min-h-screen bg-black text-white relative">
+            <ParticleBackground />
             <Navbar />
-            <div className="container mx-auto px-4 py-24">
+            <div className="container mx-auto px-4 py-32 relative z-10">
                 <div className="max-w-2xl mx-auto">
-                    <h1 className="text-4xl font-bold font-heading mb-6 text-center">Get in <span className="text-primary">Touch</span></h1>
-                    <p className="text-center text-gray-600 mb-12">
-                        Have questions? Stuck on a bug? Or just want to say hi? We'd love to hear from you.
-                    </p>
-
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
-                        <div className="bg-gray-50 p-6 rounded-2xl text-center border border-gray-100 hover:border-primary/20 transition-colors">
-                            <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
-                                <Mail className="h-5 w-5" />
-                            </div>
-                            <h3 className="font-bold mb-1">Email</h3>
-                            <p className="text-sm text-gray-500">support@helloworld.com</p>
+                    <div className="text-center mb-12">
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-primary/10 text-primary text-xs font-bold tracking-wider uppercase mb-6 border border-primary/30 box-glow">
+                            <Sparkles className="h-3 w-3" />
+                            <span className="text-glow">System Communication</span>
                         </div>
-                        <div className="bg-gray-50 p-6 rounded-2xl text-center border border-gray-100 hover:border-primary/20 transition-colors">
-                            <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
-                                <MessageCircle className="h-5 w-5" />
-                            </div>
-                            <h3 className="font-bold mb-1">Discord</h3>
-                            <p className="text-sm text-gray-500">Join our community</p>
-                        </div>
-                        <div className="bg-gray-50 p-6 rounded-2xl text-center border border-gray-100 hover:border-primary/20 transition-colors">
-                            <div className="bg-primary/10 w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-4 text-primary">
-                                <MapPin className="h-5 w-5" />
-                            </div>
-                            <h3 className="font-bold mb-1">Location</h3>
-                            <p className="text-sm text-gray-500">Online Everywhere</p>
-                        </div>
+                        <h1 className="text-5xl font-black font-heading mb-6 tracking-tighter">
+                            GET IN <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-500 glitch-text" data-text="TOUCH">TOUCH</span>
+                        </h1>
+                        <p className="text-slate-400 text-lg font-mono">
+                            Have questions? Stuck on a bug? Or just want to say hi? We'd love to hear from you.
+                        </p>
                     </div>
 
-                    <form className="space-y-4 bg-white p-8 rounded-2xl border border-gray-200 shadow-sm">
-                        <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                        {[
+                            { icon: Mail, title: "Email", value: "support@helloworld.com" },
+                            { icon: MessageCircle, title: "Discord", value: "Join our community" },
+                            { icon: MapPin, title: "Location", value: "Online Everywhere" }
+                        ].map((item, i) => (
+                            <div key={i} className="bg-white/5 p-6 rounded-none text-center border border-white/10 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group">
+                                <div className="bg-black w-12 h-12 flex items-center justify-center mx-auto mb-4 text-primary border border-primary/30 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(0,243,255,0.2)]">
+                                    <item.icon className="h-5 w-5" />
+                                </div>
+                                <h3 className="font-bold mb-1 text-white font-heading tracking-wide uppercase">{item.title}</h3>
+                                <p className="text-xs text-slate-400 font-mono">{item.value}</p>
+                            </div>
+                        ))}
+                    </div>
+
+                    <form className="space-y-6 bg-black/40 backdrop-blur-md p-8 rounded-none border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)] relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-purple-500"></div>
+                        <div className="grid grid-cols-2 gap-6">
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-gray-700">Name</label>
-                                <input type="text" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="John Doe" />
+                                <label className="text-xs font-bold text-primary uppercase tracking-widest">Name</label>
+                                <input type="text" className="w-full px-4 py-3 bg-black/50 border border-white/10 text-white rounded-none focus:outline-none focus:border-primary focus:shadow-[0_0_15px_rgba(0,243,255,0.3)] transition-all font-mono text-sm placeholder:text-slate-600" placeholder="John Doe" />
                             </div>
                             <div className="space-y-2">
-                                <label className="text-sm font-bold text-gray-700">Email</label>
-                                <input type="email" className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20" placeholder="john@example.com" />
+                                <label className="text-xs font-bold text-primary uppercase tracking-widest">Email</label>
+                                <input type="email" className="w-full px-4 py-3 bg-black/50 border border-white/10 text-white rounded-none focus:outline-none focus:border-primary focus:shadow-[0_0_15px_rgba(0,243,255,0.3)] transition-all font-mono text-sm placeholder:text-slate-600" placeholder="john@example.com" />
                             </div>
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm font-bold text-gray-700">Message</label>
-                            <textarea className="w-full px-4 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20 min-h-[120px]" placeholder="How can we help?"></textarea>
+                            <label className="text-xs font-bold text-primary uppercase tracking-widest">Message</label>
+                            <textarea className="w-full px-4 py-3 bg-black/50 border border-white/10 text-white rounded-none focus:outline-none focus:border-primary focus:shadow-[0_0_15px_rgba(0,243,255,0.3)] transition-all font-mono text-sm min-h-[150px] placeholder:text-slate-600" placeholder="How can we help?"></textarea>
                         </div>
-                        <button className="w-full bg-primary text-white font-bold py-3 rounded-xl hover:bg-primary/90 transition-colors">
+                        <button className="w-full bg-primary text-black font-black py-4 rounded-none hover:bg-white transition-colors border border-primary hover:border-white shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.6)] uppercase tracking-widest clip-path-polygon transform hover:-translate-y-1 duration-300">
                             Send Message
                         </button>
                     </form>

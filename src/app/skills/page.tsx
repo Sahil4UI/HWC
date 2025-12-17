@@ -1,8 +1,15 @@
+import { Navbar } from "@/components/layout/Navbar"
+import { ParticleBackground } from "@/components/ui/ParticleBackground"
+import { SkillsGrid } from "@/components/home/SkillsGrid"
+
 export default function SkillsPage() {
     return (
-        <div className="container mx-auto px-4 py-32 text-center">
-            <h1 className="text-4xl font-bold font-heading mb-4">Skills</h1>
-            <p className="text-gray-600">Select a skill to start learning. Content coming soon.</p>
+        <div className="min-h-screen bg-black text-white relative">
+            <ParticleBackground />
+            <Navbar />
+            <div className="pt-20">
+                <SkillsGrid />
+            </div>
         </div>
     )
 }

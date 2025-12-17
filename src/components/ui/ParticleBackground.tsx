@@ -45,6 +45,14 @@ export function ParticleBackground() {
                 this.color = Math.random() > 0.5 ? "rgba(0, 243, 255, " : "rgba(189, 0, 255, "
             }
 
+            draw() {
+                if (!ctx) return
+                ctx.fillStyle = this.color + "0.5)"
+                ctx.beginPath()
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
+                ctx.fill()
+            }
+
             update() {
                 this.x += this.vx
                 this.y += this.vy
@@ -81,8 +89,10 @@ export function ParticleBackground() {
         }
 
         const init = () => {
-            particles.length = 0
-            for (let i = 0; i < particleCount; i++) {
+            // Performance: Limit particles (Max 60 for mobile/desktop balance)
+            const numberOfParticles = Math.min((width * height) / 15000, 60)
+            particles = [] // Reassign particles array
+            for (let i = 0; i < numberOfParticles; i++) {
                 particles.push(new Particle())
             }
         }
@@ -92,7 +102,9 @@ export function ParticleBackground() {
             ctx.clearRect(0, 0, width, height)
 
             // Cyberpunk Grid Background (Subtle)
-            ctx.strokeStyle = "rgba(0, 243, 255, 0.02)" // Further reduced opacity
+            // Perf: Render grid less frequently or use CSS?
+            // Keeping canvas grid for now but optimized opacity
+            ctx.strokeStyle = "rgba(0, 243, 255, 0.03)"
             ctx.lineWidth = 1
             const gridSize = 50
             for (let x = 0; x < width; x += gridSize) {
@@ -113,15 +125,16 @@ export function ParticleBackground() {
                 particle.update()
                 particle.draw()
 
-                // Draw connections
+                // Draw connections - Optimized distance
                 for (let j = i; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x
                     const dy = particles[i].y - particles[j].y
                     const distance = Math.sqrt(dx * dx + dy * dy)
 
-                    if (distance < connectionDistance) {
+                    // Reduced connection distance for performance
+                    if (distance < 100) {
                         ctx.beginPath()
-                        ctx.strokeStyle = `rgba(0, 243, 255, ${0.2 - distance / connectionDistance * 0.2})` // Fainter connections
+                        ctx.strokeStyle = `rgba(0, 243, 255, ${0.15 - distance / 100 * 0.15})` // Cyan connections
                         ctx.lineWidth = 1
                         ctx.shadowBlur = 0 // Performance
                         ctx.moveTo(particles[i].x, particles[i].y)
@@ -163,7 +176,7 @@ export function ParticleBackground() {
     return (
         <canvas
             ref={canvasRef}
-            className="fixed inset-0 -z-10 bg-[#050505]"
+            className="fixed inset-0 -z-10 bg-black"
             style={{ pointerEvents: "none" }}
         />
     )

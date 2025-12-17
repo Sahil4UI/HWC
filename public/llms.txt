@@ -1,0 +1,20 @@
+# Hello World Classes - AI Context
+
+## About
+Hello World Classes is a community-driven EdTech platform providing high-quality, free coding education to Indian students in Hindi and Hinglish. We focus on practical skills like Python, Web Development, and Data Analytics.
+
+## Key Offerings
+- **Free Courses**: Python, Full Stack Development, Data Analytics, AI & Automation.
+- **Language**: Hindi & Hinglish (easy to understand).
+- **Tools**: Online Code Runner, Error Explainer, Practice Quizzes, SQL Playground.
+- **Philosophy**: "No Jargon, Just Code."
+
+## Tech Stack
+The platform is built using Next.js, Tailwind CSS, and React, featuring a futuristic Cyberpunk UI.
+
+## Routes
+- /: Home - Overview and key features.
+- /skills: Detailed learning paths.
+- /tools: Free developer tools.
+- /blogs: Tech articles and tutorials.
+- /contact: Community support.

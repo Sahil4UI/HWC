@@ -26,7 +26,7 @@ export function CommunityCTA() {
                         </Button>
                     </Link>
                     <Link href="#">
-                        <Button size="lg" className="bg-white text-black hover:bg-purple-600 hover:text-white border-0 w-full sm:w-auto h-14 px-8 text-lg font-black uppercase tracking-widest clip-path-polygon rounded-none shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(168,85,247,0.6)] hover:scale-105 transition-all">
+                        <Button size="lg" className="bg-white text-black border-0 w-full sm:w-auto h-14 px-8 text-lg font-black uppercase tracking-widest clip-path-polygon rounded-none shadow-[0_0_20px_rgba(255,255,255,0.2)] hover:shadow-[0_0_30px_rgba(255,255,255,0.8)] hover:scale-105 transition-all">
                             <Users className="mr-2 h-6 w-6" />
                             JOIN COMMUNITY
                         </Button>

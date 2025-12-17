@@ -4,28 +4,48 @@ const features = [
     {
         icon: Smile,
         title: "Simple Explanations",
-        desc: "No jargon. We explain complex topics in plain English (and Hindi/Hinglish)."
+        desc: "No jargon. We explain complex topics in plain English (and Hindi/Hinglish).",
+        color: "text-yellow-400",
+        bg: "bg-yellow-400/10",
+        border: "border-yellow-400/20",
+        shadow: "shadow-[0_0_15px_rgba(250,204,21,0.3)]",
+        hoverText: "group-hover:text-yellow-400 group-hover:drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]"
     },
     {
         icon: Briefcase,
         title: "Career Focused",
-        desc: "Learn what companies actually ask for in interviews."
+        desc: "Learn what companies actually ask for in interviews.",
+        color: "text-cyan-400",
+        bg: "bg-cyan-400/10",
+        border: "border-cyan-400/20",
+        shadow: "shadow-[0_0_15px_rgba(34,211,238,0.3)]",
+        hoverText: "group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]"
     },
     {
         icon: Globe,
         title: "Hindi-Friendly",
-        desc: "Content designed for Indian students to learn comfortably."
+        desc: "Content designed for Indian students to learn comfortably.",
+        color: "text-green-400",
+        bg: "bg-green-400/10",
+        border: "border-green-400/20",
+        shadow: "shadow-[0_0_15px_rgba(74,222,128,0.3)]",
+        hoverText: "group-hover:text-green-400 group-hover:drop-shadow-[0_0_5px_rgba(74,222,128,0.8)]"
     },
     {
         icon: DollarSign,
         title: "Free & Affordable",
-        desc: "High-quality education shouldn't cost a fortune."
+        desc: "High-quality education shouldn't cost a fortune.",
+        color: "text-pink-400",
+        bg: "bg-pink-400/10",
+        border: "border-pink-400/20",
+        shadow: "shadow-[0_0_15px_rgba(244,114,182,0.3)]",
+        hoverText: "group-hover:text-pink-400 group-hover:drop-shadow-[0_0_5px_rgba(244,114,182,0.8)]"
     }
 ]
 
 export function WhyUs() {
     return (
-        <section className="py-24 bg-black relative overflow-hidden">
+        <section className="py-24 relative overflow-hidden bg-black/40">
             <div className="absolute top-1/2 left-0 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] -z-10 -translate-y-1/2"></div>
 
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,14 +65,14 @@ export function WhyUs() {
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                             {features.map((feature, index) => (
-                                <div key={index} className="flex gap-4 p-4 border border-white/5 bg-white/5 hover:border-primary/30 transition-colors">
+                                <div key={index} className={`flex gap-4 p-4 border bg-white/5 hover:bg-white/10 transition-colors rounded-none group ${feature.border} hover:border-opacity-50`}>
                                     <div className="mt-1">
-                                        <div className="p-2 bg-primary/10 rounded-none text-primary border border-primary/20">
+                                        <div className={`p-2 rounded-none border transition-all duration-300 group-hover:scale-110 ${feature.bg} ${feature.color} ${feature.border} ${feature.shadow}`}>
                                             <feature.icon className="h-5 w-5" />
                                         </div>
                                     </div>
                                     <div>
-                                        <h4 className="font-bold mb-2 text-white font-heading tracking-wide uppercase">{feature.title}</h4>
+                                        <h4 className={`font-bold mb-2 text-white font-heading tracking-wide uppercase transition-colors ${feature.hoverText}`}>{feature.title}</h4>
                                         <p className="text-sm text-slate-400 font-mono leading-relaxed">{feature.desc}</p>
                                     </div>
                                 </div>
@@ -67,7 +87,7 @@ export function WhyUs() {
                                 <div className="h-4 w-3/4 bg-white/10 rounded-sm animate-pulse"></div>
                                 <div className="h-4 w-1/2 bg-white/10 rounded-sm animate-pulse delay-75"></div>
                                 <div className="h-4 w-5/6 bg-white/10 rounded-sm animate-pulse delay-150"></div>
-                                <div className="h-auto w-full group-hover:scale-[1.02] transition-transform duration-500 rounded-none shadow-2xl">
+                                <div className="h-auto w-full group-hover:scale-[1.02] transition-transform duration-500 rounded-none shadow-2xl overflow-hidden border border-white/5">
                                     <CodeBlock />
                                 </div>
                             </div>

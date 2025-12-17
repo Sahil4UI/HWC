@@ -52,7 +52,7 @@ const skills = [
 
 export function SkillsGrid() {
     return (
-        <section className="py-24 bg-black relative overflow-hidden">
+        <section className="py-24 bg-black/90 relative overflow-hidden">
             {/* Background Glows */}
             <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] -z-10"></div>
             <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/5 rounded-full blur-[100px] -z-10"></div>
@@ -88,7 +88,7 @@ export function SkillsGrid() {
                                         )}
                                     </div>
 
-                                    <h3 className="text-2xl font-black mb-3 text-white group-hover:text-primary transition-colors font-heading tracking-wide">
+                                    <h3 className="text-2xl font-black mb-3 text-white group-hover:text-cyan-400 group-hover:drop-shadow-[0_0_5px_rgba(34,211,238,0.8)] transition-colors font-heading tracking-wide">
                                         {skill.title}
                                     </h3>
                                     <p className="text-slate-400 mb-6 text-sm leading-relaxed font-mono">

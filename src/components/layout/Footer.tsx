@@ -30,8 +30,8 @@ export function Footer() {
                     </div>
 
                     <div className="flex gap-6 text-sm text-slate-400 font-mono">
-                        <Link href="/privacy" className="hover:text-primary transition-colors uppercase tracking-wider">Privacy Protocol</Link>
-                        <Link href="/terms" className="hover:text-primary transition-colors uppercase tracking-wider">Terms of Service</Link>
+                        <Link href="/privacy" className="hover:text-shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all uppercase tracking-wider">Privacy Protocol</Link>
+                        <Link href="/terms" className="hover:text-shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all uppercase tracking-wider">Terms of Service</Link>
                     </div>
                 </div>
 

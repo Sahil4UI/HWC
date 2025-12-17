@@ -3,7 +3,7 @@
 import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Menu, X } from "lucide-react"
+import { Menu, X, Terminal } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/Button"
 
@@ -43,23 +43,26 @@ export function Navbar() {
             )}
         >
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex h-16 items-center justify-between">
+                <div className="flex items-center justify-between h-16">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center gap-2">
-                        <span className="font-heading text-xl font-bold tracking-tight text-primary">
-                            HELLO WORLD <span className="text-foreground">CLASSES</span>
+                    <Link href="/" className="flex items-center space-x-2 group">
+                        <div className="bg-primary/10 p-2 rounded-full border border-primary/20 group-hover:border-primary/50 transition-all">
+                            <Terminal className="h-6 w-6 text-primary" />
+                        </div>
+                        <span className="font-bold text-xl tracking-tight hidden sm:block">
+                            HELLO<span className="text-primary">WORLD</span>
                         </span>
                     </Link>
 
                     {/* Desktop Nav */}
-                    <nav className="hidden md:flex items-center gap-8">
+                    <nav className="hidden md:flex space-x-8">
                         {navItems.map((item) => (
                             <Link
                                 key={item.href}
                                 href={item.href}
                                 className={cn(
-                                    "text-sm font-medium transition-colors hover:text-primary relative group",
-                                    pathname === item.href ? "text-primary" : "text-muted-foreground"
+                                    "text-sm font-bold transition-colors relative group",
+                                    pathname === item.href ? "text-cyan-400 drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]" : "text-gray-400 hover:text-cyan-400 hover:drop-shadow-[0_0_5px_rgba(34,211,238,0.8)]"
                                 )}
                             >
                                 {item.name}
@@ -89,7 +92,7 @@ export function Navbar() {
             {/* Mobile Nav */}
             <div
                 className={cn(
-                    "md:hidden fixed inset-x-0 top-16 bg-black/95 backdrop-blur-xl border-b border-white/10 transition-all duration-300 ease-in-out overflow-hidden shadow-xl",
+                    "md:hidden fixed inset-x-0 top-16 bg-black/95 backdrop-blur-xl border-b border-white/10 transition-all duration-300 ease-in-out overflow-hidden shadow-2xl",
                     isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
                 )}
             >

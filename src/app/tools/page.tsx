@@ -106,7 +106,7 @@ export default function ToolsPage() {
                                         {tool.icon}
                                     </div>
 
-                                    <h3 className="text-2xl font-black text-white mb-3 group-hover:text-primary transition-colors font-heading tracking-wide">
+                                    <h3 className="text-2xl font-black text-white mb-3 transition-colors font-heading tracking-wide group-hover:text-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
                                         {tool.title}
                                     </h3>
                                     <p className="text-slate-400 leading-relaxed mb-6 font-mono text-sm">
@@ -157,7 +157,7 @@ export default function ToolsPage() {
                             { title: "Interview Prep", icon: FileQuestion, desc: "Mock coding interviews" },
                         ].map((tool, i) => (
                             <div key={i} className="group border border-dashed border-slate-700 hover:border-primary/60 rounded-none p-8 bg-black/40 hover:bg-primary/5 transition-all">
-                                <div className="mx-auto mb-5 w-12 h-12 flex items-center justify-center bg-slate-800 group-hover:bg-primary text-slate-400 group-hover:text-white transition-colors shadow-sm rounded-none clip-path-polygon">
+                                <div className="mx-auto mb-5 w-12 h-12 flex items-center justify-center bg-slate-800 text-slate-400 transition-colors shadow-sm rounded-none clip-path-polygon group-hover:bg-primary/20 group-hover:text-primary group-hover:shadow-[0_0_15px_rgba(0,243,255,0.4)]">
                                     <tool.icon className="h-6 w-6" />
                                 </div>
                                 <h3 className="font-bold text-lg text-white mb-1 font-heading">{tool.title}</h3>
