@@ -72,7 +72,7 @@ export function WhyUs() {
                                         </div>
                                     </div>
                                     <div>
-                                        <h4 className={`font-bold mb-2 text-white font-heading tracking-wide uppercase transition-colors ${feature.hoverText}`}>{feature.title}</h4>
+                                        <h3 className={`font-bold mb-2 text-white font-heading tracking-wide uppercase transition-colors ${feature.hoverText}`}>{feature.title}</h3>
                                         <p className="text-sm text-slate-400 font-mono leading-relaxed">{feature.desc}</p>
                                     </div>
                                 </div>

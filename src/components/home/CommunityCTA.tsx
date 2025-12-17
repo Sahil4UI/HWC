@@ -20,7 +20,7 @@ export function CommunityCTA() {
 
                 <div className="flex flex-col sm:flex-row gap-6 justify-center">
                     <Link href="https://youtube.com" target="_blank">
-                        <Button size="lg" className="bg-[#FF0000] text-white hover:bg-[#CC0000] border-2 border-transparent hover:border-white shadow-[0_0_20px_rgba(255,0,0,0.4)] clip-path-polygon rounded-none h-14 px-8 text-lg font-black uppercase tracking-widest flex items-center gap-3 transition-all transform hover:scale-105">
+                        <Button size="lg" className="bg-red-600 text-white hover:bg-red-700 border-2 border-transparent hover:border-white shadow-[0_0_20px_rgba(220,38,38,0.4)] clip-path-polygon rounded-none h-14 px-8 text-lg font-black uppercase tracking-widest flex items-center gap-3 transition-all transform hover:scale-105">
                             <Youtube className="w-6 h-6 fill-white" />
                             LEARN FREE ON YOUTUBE
                         </Button>
