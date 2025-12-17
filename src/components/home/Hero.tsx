@@ -31,7 +31,7 @@ export function Hero() {
                 {/* Actions */}
                 <div className="flex flex-col sm:flex-row gap-6 justify-center animate-fade-in-up delay-300 mb-10">
                     <Link href="/skills/python">
-                        <Button size="lg" className="h-16 px-10 text-xl bg-primary text-black font-black rounded-none border border-primary shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_40px_rgba(0,243,255,0.6)] hover:scale-105 transition-all duration-300 hover:bg-white clip-path-polygon">
+                        <Button size="lg" className="h-16 px-10 text-xl bg-primary text-white font-black rounded-none border border-primary shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_40px_rgba(0,243,255,0.6)] hover:scale-105 transition-all duration-300 hover:bg-white hover:text-black clip-path-polygon">
                             INITIALIZE_SEQUENCE
                             <Terminal className="ml-2 h-6 w-6" />
                         </Button>

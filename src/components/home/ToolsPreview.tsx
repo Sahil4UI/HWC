@@ -87,18 +87,18 @@ export function ToolsPreview() {
 
                     {/* CTA Card - Redesigned for Visibility */}
                     <Link href="/tools" className="group">
-                        <Card className="h-full bg-white text-black border-2 border-white flex flex-col justify-center items-center text-center p-8 hover:bg-primary hover:border-primary transition-all duration-300 rounded-none shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_40px_rgba(0,243,255,0.5)] cursor-pointer relative overflow-hidden">
+                        <Card className="h-full bg-white text-black border-2 border-white flex flex-col justify-center items-center text-center p-8 hover:bg-black hover:border-primary transition-all duration-300 rounded-none shadow-[0_0_40px_rgba(255,255,255,0.1)] hover:shadow-[0_0_40px_rgba(0,243,255,0.5)] cursor-pointer relative overflow-hidden">
                             <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 group-hover:opacity-0 transition-opacity"></div>
 
                             <div className="relative z-10 space-y-4">
-                                <div className="inline-flex p-3 rounded-full bg-black text-white group-hover:bg-white group-hover:text-black transition-colors mb-2 shadow-xl">
+                                <div className="inline-flex p-3 rounded-full bg-black text-white group-hover:bg-primary group-hover:text-black transition-colors mb-2 shadow-xl">
                                     <Zap className="h-8 w-8 fill-current" />
                                 </div>
                                 <div>
-                                    <h3 className="font-black text-2xl mb-1 font-heading uppercase tracking-tighter">EXPLORE ALL TOOLS</h3>
-                                    <p className="text-gray-600 font-bold font-mono text-xs group-hover:text-black/80">See what else we have built.</p>
+                                    <h3 className="font-black text-2xl mb-1 font-heading uppercase tracking-tighter group-hover:text-white transition-colors">EXPLORE ALL TOOLS</h3>
+                                    <p className="text-gray-600 font-bold font-mono text-xs group-hover:text-slate-400 transition-colors">See what else we have built.</p>
                                 </div>
-                                <div className="inline-flex items-center font-black text-sm uppercase tracking-widest border-b-2 border-black group-hover:border-white pb-1 group-hover:text-white transition-colors">
+                                <div className="inline-flex items-center font-black text-sm uppercase tracking-widest border-b-2 border-black group-hover:border-primary pb-1 group-hover:text-primary transition-colors">
                                     View Library <ArrowRight className="ml-2 h-4 w-4" />
                                 </div>
                             </div>
