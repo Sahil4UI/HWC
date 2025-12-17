@@ -19,7 +19,7 @@ export default function BlogsPage() {
                         <span className="text-glow">System Logs</span>
                     </div>
                     <h1 className="text-5xl md:text-6xl font-black font-heading mb-6 tracking-tighter">
-                        LATEST <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-primary to-purple-500 glitch-text" data-text="ARTICLES">ARTICLES</span>
+                        LATEST <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#00F3FF] to-purple-500 glitch-text" data-text="ARTICLES">ARTICLES</span>
                     </h1>
                 </div>
 

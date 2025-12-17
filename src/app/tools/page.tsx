@@ -79,7 +79,7 @@ export default function ToolsPage() {
                     <div className="text-center mb-16 relative z-10">
                         <h1 className="text-5xl md:text-7xl font-black font-heading mb-6 tracking-tight">
                             <span className="block text-white drop-shadow-md">DEVELOPER</span>
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-500 glitch-text" data-text="TOOLKIT">TOOLKIT</span>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-[#00F3FF] to-purple-500 glitch-text" data-text="TOOLKIT">TOOLKIT</span>
                         </h1>
                         <p className="text-xl text-slate-400 max-w-3xl mx-auto font-mono mb-8">
                             Free online tools built for students to <span className="text-primary font-bold">practice faster</span>, <span className="text-purple-400 font-bold">debug smarter</span>, and learn better — without installing anything.

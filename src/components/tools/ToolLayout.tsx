@@ -70,14 +70,14 @@ export function ToolLayout({ title, subtitle, children, videoLink }: ToolLayoutP
 
                     {videoLink ? (
                         <Link href={videoLink} target="_blank" className="relative z-10">
-                            <Button className="bg-primary text-black hover:bg-white hover:scale-105 transition-all font-bold rounded-none shadow-[0_0_15px_rgba(0,243,255,0.4)] border-0 h-12 px-8 uppercase tracking-widest clip-path-polygon">
-                                <Youtube className="mr-2 h-4 w-4" /> Watch Lesson
+                            <Button className="bg-primary text-white hover:bg-white hover:text-black hover:scale-105 transition-all font-bold rounded-none shadow-[0_0_15px_rgba(0,243,255,0.4)] border-0 h-12 px-8 uppercase tracking-widest clip-path-polygon group">
+                                <Youtube className="mr-2 h-4 w-4 text-white group-hover:text-black" /> Watch Lesson
                             </Button>
                         </Link>
                     ) : (
-                        <Link href="https://youtube.com" target="_blank" className="relative z-10">
-                            <Button className="bg-primary text-black hover:bg-white hover:scale-105 transition-all font-bold rounded-none shadow-[0_0_15px_rgba(0,243,255,0.4)] border-0 h-12 px-8 uppercase tracking-widest clip-path-polygon">
-                                <Youtube className="mr-2 h-4 w-4" /> Watch Python Course
+                        <Link href="https://www.youtube.com/@HelloWorldClasses" target="_blank" className="relative z-10">
+                            <Button className="bg-primary text-white hover:bg-white hover:text-black hover:scale-105 transition-all font-bold rounded-none shadow-[0_0_15px_rgba(0,243,255,0.4)] border-0 h-12 px-8 uppercase tracking-widest clip-path-polygon group">
+                                <Youtube className="mr-2 h-4 w-4 text-white group-hover:text-black" /> Watch Python Course
                             </Button>
                         </Link>
                     )}

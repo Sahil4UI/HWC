@@ -51,13 +51,13 @@ export function WhyUs() {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
 
-                    <div className="order-2 lg:order-1">
-                        <div className="flex items-center gap-2 mb-4 text-primary font-bold tracking-widest uppercase text-xs">
+                    <div className="order-2 lg:order-1 text-center lg:text-left">
+                        <div className="flex items-center gap-2 mb-4 text-primary font-bold tracking-widest uppercase text-xs justify-center lg:justify-start">
                             <Zap className="h-4 w-4" /> The Hello World Advantage
                         </div>
                         <h2 className="text-4xl md:text-5xl font-black font-heading mb-6 text-white leading-tight">
                             WHY LEARN AT <br />
-                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-primary to-green-400 glitch-text" data-text="HELLO WORLD?">HELLO WORLD?</span>
+                            <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#00F3FF] to-green-400 glitch-text" data-text="HELLO WORLD?">HELLO WORLD?</span>
                         </h2>
                         <p className="text-slate-400 mb-8 text-lg font-mono leading-relaxed">
                             We are not another corporate ed-tech giant. We are a <span className="text-white font-bold">community built by teachers</span> who care about your growth.

@@ -4,6 +4,7 @@ import * as React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Menu, X, Terminal } from "lucide-react"
+import Image from "next/image"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/Button"
 
@@ -45,13 +46,15 @@ export function Navbar() {
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between h-16">
                     {/* Logo */}
-                    <Link href="/" className="flex items-center space-x-2 group">
-                        <div className="bg-primary/10 p-2 rounded-full border border-primary/20 group-hover:border-primary/50 transition-all">
-                            <Image src="/logo.png" alt="Hello World Classes Logo" width={32} height={32} className="w-8 h-8 object-contain" />
+                    <Link href="/" className="flex items-center group">
+                        <div className="relative w-32 h-8 sm:w-40 sm:h-10 md:w-56 md:h-14 transition-all duration-300">
+                            <Image
+                                src="/logo-main.png"
+                                alt="Hello World Classes"
+                                fill
+                                className="object-contain object-left"
+                            />
                         </div>
-                        <span className="font-bold text-xl tracking-tight hidden sm:block">
-                            HELLO<span className="text-primary">WORLD</span>
-                        </span>
                     </Link>
 
                     {/* Desktop Nav */}
@@ -81,10 +84,10 @@ export function Navbar() {
 
                     {/* Mobile Menu Button */}
                     <button
-                        className="md:hidden p-2 text-foreground"
+                        className="md:hidden p-2 text-white hover:text-primary transition-colors"
                         onClick={() => setIsOpen(!isOpen)}
                     >
-                        {isOpen ? <X /> : <Menu />}
+                        {isOpen ? <X className="h-8 w-8" /> : <Menu className="h-8 w-8" />}
                     </button>
                 </div>
             </div>
@@ -103,8 +106,10 @@ export function Navbar() {
                             href={item.href}
                             onClick={() => setIsOpen(false)}
                             className={cn(
-                                "px-4 py-3 rounded-xl text-base font-medium transition-colors hover:bg-primary/5",
-                                pathname === item.href ? "bg-primary/10 text-primary" : "text-foreground"
+                                "px-4 py-3 rounded-xl text-base font-medium transition-all duration-300 border",
+                                pathname === item.href
+                                    ? "bg-gradient-to-r from-primary/20 to-purple-500/20 text-[#00F3FF] border-primary/50 shadow-[0_0_15px_rgba(0,243,255,0.3)]"
+                                    : "text-slate-200 hover:text-white hover:bg-white/5 border-transparent"
                             )}
                         >
                             <div className="flex justify-between items-center">

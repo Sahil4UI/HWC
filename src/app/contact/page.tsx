@@ -20,7 +20,7 @@ export default function ContactPage() {
                             <span className="text-glow">System Communication</span>
                         </div>
                         <h1 className="text-5xl font-black font-heading mb-6 tracking-tighter">
-                            GET IN <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-purple-500 glitch-text" data-text="TOUCH">TOUCH</span>
+                            GET IN <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-[#00F3FF] to-purple-500 glitch-text" data-text="TOUCH">TOUCH</span>
                         </h1>
                         <p className="text-slate-400 text-lg font-mono">
                             Have questions? Stuck on a bug? Or just want to say hi? We'd love to hear from you.

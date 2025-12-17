@@ -18,7 +18,7 @@ export function Hero() {
                 {/* Main Heading */}
                 <h1 className="text-4xl md:text-7xl lg:text-8xl font-black font-heading tracking-tighter mb-8 animate-fade-in-up delay-100 leading-none drop-shadow-[0_0_15px_rgba(0,243,255,0.3)]">
                     <span className="block text-white mb-2 dropdown-shadow-[0_2px_10px_black]">MASTER THE FUTURE OF</span>
-                    <span className="relative block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-primary to-purple-500 pb-2 glitch-text" data-text="CODING & TECH SKILLS">
+                    <span className="relative block text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-[#00F3FF] to-purple-500 pb-2 glitch-text" data-text="CODING & TECH SKILLS">
                         CODING & TECH SKILLS
                     </span>
                 </h1>

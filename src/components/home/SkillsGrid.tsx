@@ -65,7 +65,7 @@ export function SkillsGrid() {
                         <span className="text-glow">Level Up Your Arsenal</span>
                     </div>
                     <h2 className="text-4xl md:text-5xl font-black font-heading mb-4 text-white uppercase tracking-tighter">
-                        Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-primary to-purple-500 glitch-text" data-text="IN-DEMAND SKILLS">In-Demand Skills</span>
+                        Explore <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#00F3FF] to-purple-500 glitch-text" data-text="IN-DEMAND SKILLS">In-Demand Skills</span>
                     </h2>
                     <p className="text-slate-400 max-w-2xl mx-auto text-lg font-mono">
                         Choose a learning path designed to take you from <span className="text-white font-bold">Hello World</span> to <span className="text-primary font-bold">Industry Ready</span>.

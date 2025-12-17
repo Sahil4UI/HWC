@@ -63,7 +63,7 @@ export function ToolsPreview() {
                         Free Tools for Students
                     </span>
                     <h2 className="text-4xl md:text-5xl font-black font-heading mb-4 text-white uppercase tracking-tighter">
-                        Code Smarter with <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-primary to-purple-500 glitch-text" data-text="POWERFUL TOOLS">Powerful Tools</span>
+                        Code Smarter with <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#00F3FF] to-purple-500 glitch-text" data-text="POWERFUL TOOLS">Powerful Tools</span>
                     </h2>
                     <p className="text-slate-400 max-w-2xl mx-auto text-lg font-mono">
                         Everything you need to practice, debug, and learn faster — completely <span className="text-primary font-bold">FREE</span>.
@@ -98,7 +98,7 @@ export function ToolsPreview() {
                                     <h3 className="font-black text-2xl mb-1 font-heading uppercase tracking-tighter group-hover:text-white transition-colors">EXPLORE ALL TOOLS</h3>
                                     <p className="text-gray-600 font-bold font-mono text-xs group-hover:text-slate-400 transition-colors">See what else we have built.</p>
                                 </div>
-                                <div className="inline-flex items-center font-black text-sm uppercase tracking-widest border-b-2 border-black group-hover:border-primary pb-1 group-hover:text-primary transition-colors">
+                                <div className="inline-flex items-center font-black text-sm uppercase tracking-widest border-b-2 border-black group-hover:border-white pb-1 group-hover:text-white transition-colors">
                                     View Library <ArrowRight className="ml-2 h-4 w-4" />
                                 </div>
                             </div>

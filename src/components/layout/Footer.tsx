@@ -9,24 +9,21 @@ export function Footer() {
                 <div className="flex flex-col md:flex-row justify-between items-center gap-8">
 
                     <div className="text-center md:text-left">
-                        <h3 className="font-heading text-xl font-black text-white flex items-center gap-2">
-                            <div className="relative w-6 h-6">
-                                <Image
-                                    src="/logo.png"
-                                    alt="HW Classes"
-                                    fill
-                                    className="object-contain"
-                                />
-                            </div>
-                            HELLO WORLD CLASSES
-                        </h3>
+                        <div className="relative w-32 h-8 sm:w-48 sm:h-12 md:w-64 md:h-16 mx-auto md:mx-0 mb-4">
+                            <Image
+                                src="/logo-main.png"
+                                alt="Hello World Classes"
+                                fill
+                                className="object-contain object-center md:object-left"
+                            />
+                        </div>
                         <p className="text-sm text-slate-400 mt-2 font-mono max-w-xs">
                             Hello World Classes is an online learning platform focused on coding education, Python tutorials, programming tools, and career-oriented tech skills for Indian students.
                         </p>
                     </div>
 
                     <div className="flex gap-6">
-                        <Link href="#" aria-label="YouTube" className="p-2 bg-white/5 rounded-none text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-all border border-transparent hover:border-red-500/50">
+                        <Link href="https://www.youtube.com/@HelloWorldClasses" target="_blank" aria-label="YouTube" className="p-2 bg-white/5 rounded-none text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-all border border-transparent hover:border-red-500/50">
                             <Youtube className="w-5 h-5" />
                         </Link>
                         <Link href="#" aria-label="Instagram" className="p-2 bg-white/5 rounded-none text-slate-400 hover:text-pink-500 hover:bg-pink-500/10 transition-all border border-transparent hover:border-pink-500/50">
