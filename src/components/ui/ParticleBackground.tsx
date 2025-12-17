@@ -45,13 +45,7 @@ export function ParticleBackground() {
                 this.color = Math.random() > 0.5 ? "rgba(0, 243, 255, " : "rgba(189, 0, 255, "
             }
 
-            draw() {
-                if (!ctx) return
-                ctx.fillStyle = this.color + "0.5)"
-                ctx.beginPath()
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2)
-                ctx.fill()
-            }
+
 
             update() {
                 this.x += this.vx
