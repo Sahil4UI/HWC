@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { Youtube, Instagram, Twitter, Terminal } from "lucide-react"
+import Image from "next/image"
+import { Youtube, Instagram, Twitter } from "lucide-react"
 
 export function Footer() {
     return (
@@ -9,7 +10,14 @@ export function Footer() {
 
                     <div className="text-center md:text-left">
                         <h3 className="font-heading text-xl font-black text-white flex items-center gap-2">
-                            <Terminal className="h-5 w-5 text-primary" />
+                            <div className="relative w-6 h-6">
+                                <Image
+                                    src="/logo.png"
+                                    alt="HW Classes"
+                                    fill
+                                    className="object-contain"
+                                />
+                            </div>
                             HELLO WORLD CLASSES
                         </h3>
                         <p className="text-sm text-slate-400 mt-2 font-mono max-w-xs">

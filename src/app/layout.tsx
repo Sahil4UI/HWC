@@ -34,7 +34,12 @@ export const metadata: Metadata = {
   },
   metadataBase: new URL('https://helloworldclasses.com'),
   alternates: {
-    canonical: '/',
+    canonical: "https://www.helloworldclasses.com",
+  },
+  icons: {
+    icon: "/logo.png",
+    shortcut: "/logo.png",
+    apple: "/logo.png",
   },
   openGraph: {
     title: "Hello World Classes | Master Coding in Hindi",

@@ -47,7 +47,7 @@ export function Navbar() {
                     {/* Logo */}
                     <Link href="/" className="flex items-center space-x-2 group">
                         <div className="bg-primary/10 p-2 rounded-full border border-primary/20 group-hover:border-primary/50 transition-all">
-                            <Terminal className="h-6 w-6 text-primary" />
+                            <Image src="/logo.png" alt="Hello World Classes Logo" width={32} height={32} className="w-8 h-8 object-contain" />
                         </div>
                         <span className="font-bold text-xl tracking-tight hidden sm:block">
                             HELLO<span className="text-primary">WORLD</span>
