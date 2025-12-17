@@ -91,7 +91,7 @@ export function ParticleBackground() {
         const init = () => {
             // Performance: Limit particles (Max 60 for mobile/desktop balance)
             const numberOfParticles = Math.min((width * height) / 15000, 60)
-            particles = [] // Reassign particles array
+            particles.length = 0 // Clear array instead of reassigning
             for (let i = 0; i < numberOfParticles; i++) {
                 particles.push(new Particle())
             }
