@@ -18,13 +18,13 @@ export function Footer() {
                     </div>
 
                     <div className="flex gap-6">
-                        <Link href="#" className="p-2 bg-white/5 rounded-none text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-all border border-transparent hover:border-red-500/50">
+                        <Link href="#" aria-label="YouTube" className="p-2 bg-white/5 rounded-none text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-all border border-transparent hover:border-red-500/50">
                             <Youtube className="w-5 h-5" />
                         </Link>
-                        <Link href="#" className="p-2 bg-white/5 rounded-none text-slate-400 hover:text-pink-500 hover:bg-pink-500/10 transition-all border border-transparent hover:border-pink-500/50">
+                        <Link href="#" aria-label="Instagram" className="p-2 bg-white/5 rounded-none text-slate-400 hover:text-pink-500 hover:bg-pink-500/10 transition-all border border-transparent hover:border-pink-500/50">
                             <Instagram className="w-5 h-5" />
                         </Link>
-                        <Link href="#" className="p-2 bg-white/5 rounded-none text-slate-400 hover:text-blue-400 hover:bg-blue-400/10 transition-all border border-transparent hover:border-blue-400/50">
+                        <Link href="#" aria-label="Twitter" className="p-2 bg-white/5 rounded-none text-slate-400 hover:text-blue-400 hover:bg-blue-400/10 transition-all border border-transparent hover:border-blue-400/50">
                             <Twitter className="w-5 h-5" />
                         </Link>
                     </div>
@@ -35,8 +35,8 @@ export function Footer() {
                     </div>
                 </div>
 
-                <div className="mt-8 pt-8 border-t border-white/5 text-center text-xs text-slate-500 font-mono">
-                    &copy; {new Date().getFullYear()} Hello World Classes. <span className="text-primary/50">System Active.</span> All rights reserved.
+                <div className="mt-8 pt-8 border-t border-white/5 text-center text-xs text-slate-400 font-mono">
+                    &copy; {new Date().getFullYear()} Hello World Classes. <span className="text-primary font-bold">System Active.</span> All rights reserved.
                 </div>
             </div>
         </footer>
