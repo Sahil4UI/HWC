@@ -18,6 +18,7 @@ export function Footer() {
                                 src="/logo-main.png"
                                 alt="Hello World Classes"
                                 fill
+                                sizes="200px"
                                 className="object-contain object-left"
                             />
                         </div>

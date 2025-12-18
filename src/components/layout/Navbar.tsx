@@ -52,6 +52,8 @@ export function Navbar() {
                                 src="/logo-main.png"
                                 alt="Hello World Classes"
                                 fill
+                                sizes="(max-width: 768px) 150px, 250px"
+                                priority
                                 className="object-contain object-left"
                             />
                         </div>
