@@ -1,178 +1,163 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowRight, Check, X, Play } from "lucide-react"
+import { ArrowRight, SplitSquareHorizontal, Code2, Sparkles, AlertTriangle } from "lucide-react"
 import { Button } from "@/components/ui/Button"
+import { explainMethodDifferenceAction } from "@/app/actions/gemini"
 
-const comparisons = [
-    {
-        id: "append-extend",
-        title: "append() vs extend()",
-        method1: "append()",
-        method2: "extend()",
-        description: "Both add items to a list, but in very different ways.",
-        scenario: "You have a shopping list: ['Milk', 'Eggs']\nYou want to add: ['Bread', 'Butter']",
-        example1: {
-            code: `cart.append(['Bread', 'Butter'])`,
-            result: `['Milk', 'Eggs', ['Bread', 'Butter']]`,
-            note: "Adds the whole list as ONE item (nested list)."
-        },
-        example2: {
-            code: `cart.extend(['Bread', 'Butter'])`,
-            result: `['Milk', 'Eggs', 'Bread', 'Butter']`,
-            note: "Adds EACH item from the new list individually."
-        }
-    },
-    {
-        id: "sort-sorted",
-        title: "sort() vs sorted()",
-        method1: "sort()",
-        method2: "sorted()",
-        description: "One changes the original list, the other creates a new one.",
-        scenario: "You have numbers: [3, 1, 2]",
-        example1: {
-            code: `nums.sort()\nprint(nums)`,
-            result: `[1, 2, 3] (Original Changed)`,
-            note: "In-place change. Returns None."
-        },
-        example2: {
-            code: `new_nums = sorted(nums)\nprint(nums)`,
-            result: `[3, 1, 2] (Original Unchanged)`,
-            note: "Creates a NEW list. Original stays messy."
-        }
-    },
-    {
-        id: "remove-pop",
-        title: "remove() vs pop()",
-        method1: "remove()",
-        method2: "pop()",
-        description: "How do you want to delete? By value or by position?",
-        scenario: "List: ['A', 'B', 'C']",
-        example1: {
-            code: `list.remove('B')`,
-            result: `['A', 'C']`,
-            note: "Deletes the first item that matches 'B'."
-        },
-        example2: {
-            code: `item = list.pop(1)`,
-            result: `Returns 'B'`,
-            note: "Deletes item at index 1 and GIVES it to you."
-        }
-    }
+const LANGUAGES = [
+    "Python", "JavaScript", "Java", "C++", "C#", "Go", "Ruby", "Swift", "PHP", "Rust", "Dart"
 ]
 
 export function MethodDifference() {
-    const [activeComp, setActiveComp] = useState(comparisons[0])
-    const [runOutput, setRunOutput] = useState<string | null>(null)
+    const [lang, setLang] = useState("Python")
+    const [method1, setMethod1] = useState("")
+    const [method2, setMethod2] = useState("")
+    const [result, setResult] = useState<{ title: string; explanation: string; keyDistinction: string; codeExample: string } | null>(null)
+    const [loading, setLoading] = useState(false)
+    const [error, setError] = useState("")
 
-    const runSimulation = (result: string) => {
-        setRunOutput("Running...")
-        setTimeout(() => {
-            setRunOutput(result)
-        }, 500)
+    const handleCompare = async () => {
+        if (!method1.trim() || !method2.trim()) return
+        setLoading(true)
+        setError("")
+        setResult(null)
+
+        const response = await explainMethodDifferenceAction(lang, method1, method2)
+
+        if (response.success && response.data) {
+            setResult(response.data)
+        } else {
+            setError(response.error || "Failed to compare. Ensure API Key is set.")
+            // Fallback for demo
+            if (response.error === "API Key Missing") {
+                setError("Please add GEMINI_API_KEY to .env.local")
+            }
+        }
+        setLoading(false)
     }
 
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="max-w-4xl mx-auto">
 
-            {/* Sidebar Selector */}
-            <div className="lg:col-span-1 flex flex-col gap-2">
-                {comparisons.map((comp) => (
-                    <button
-                        key={comp.id}
-                        onClick={() => setActiveComp(comp)}
-                        className={`p-4 rounded-xl text-left border transition-all ${activeComp.id === comp.id
-                            ? "bg-primary text-white border-primary shadow-md"
-                            : "bg-white border-gray-200 hover:border-primary/50 text-gray-700"
-                            }`}
+            {/* Input Section */}
+            <div className="bg-white rounded-2xl p-8 shadow-sm border border-gray-200 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end">
+
+                    {/* Language */}
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">Language</label>
+                        <select
+                            value={lang}
+                            onChange={(e) => setLang(e.target.value)}
+                            className="w-full p-3 rounded-xl bg-gray-50 border border-gray-200 font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-primary"
+                        >
+                            {LANGUAGES.map(l => <option key={l} value={l}>{l}</option>)}
+                        </select>
+                    </div>
+
+                    {/* Method 1 */}
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">Method 1</label>
+                        <input
+                            type="text"
+                            value={method1}
+                            onChange={(e) => setMethod1(e.target.value)}
+                            placeholder="e.g. map"
+                            className="w-full p-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary font-mono text-sm"
+                        />
+                    </div>
+
+                    {/* Method 2 */}
+                    <div>
+                        <label className="block text-sm font-bold text-gray-700 mb-2">Method 2</label>
+                        <input
+                            type="text"
+                            value={method2}
+                            onChange={(e) => setMethod2(e.target.value)}
+                            placeholder="e.g. forEach"
+                            className="w-full p-3 rounded-xl bg-gray-50 border border-gray-200 focus:outline-none focus:ring-2 focus:ring-primary font-mono text-sm"
+                        />
+                    </div>
+                </div>
+
+                <div className="mt-8 flex justify-center">
+                    <Button
+                        onClick={handleCompare}
+                        disabled={loading || !method1 || !method2}
+                        size="lg"
+                        className="w-full md:w-auto min-w-[200px] h-14 bg-indigo-600 hover:bg-indigo-700 text-white shadow-lg shadow-indigo-500/30"
                     >
-                        <span className="text-xs opacity-70 uppercase tracking-widest block mb-1">Compare</span>
-                        <span className="font-bold">{comp.title}</span>
-                    </button>
-                ))}
+                        {loading ? (
+                            <span className="flex items-center gap-2">
+                                <span className="animate-spin h-4 w-4 border-2 border-white/30 border-t-white rounded-full"></span>
+                                Analyzing...
+                            </span>
+                        ) : (
+                            <>
+                                <SplitSquareHorizontal className="mr-2 h-5 w-5" /> Compare Methods
+                            </>
+                        )}
+                    </Button>
+                </div>
+
+                {error && (
+                    <div className="mt-4 p-4 bg-red-50 text-red-600 text-sm font-bold rounded-xl flex items-center justify-center gap-2">
+                        <AlertTriangle className="h-4 w-4" /> {error}
+                    </div>
+                )}
             </div>
 
-            {/* Main Comparison Area */}
-            <div className="lg:col-span-3 space-y-8">
-
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">{activeComp.title}</h2>
-                    <p className="text-gray-500">{activeComp.description}</p>
-                </div>
-
-                <div className="bg-yellow-50 border border-yellow-200 p-4 rounded-lg text-center text-yellow-800 text-sm font-medium">
-                    Scenario: {activeComp.scenario}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Method 1 Card */}
-                    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col">
-                        <div className="bg-gray-50 p-4 border-b border-gray-200 text-center font-bold text-gray-700 font-mono">
-                            {activeComp.method1}
+            {/* Result Section */}
+            {result && (
+                <div className="bg-white rounded-2xl shadow-xl overflow-hidden animate-in slide-in-from-bottom-4 fade-in duration-500 border border-indigo-100">
+                    <div className="bg-indigo-600 p-6 text-white flex items-center gap-4">
+                        <div className="p-3 bg-white/10 rounded-lg">
+                            <SplitSquareHorizontal className="h-8 w-8 text-indigo-100" />
                         </div>
-                        <div className="p-6 space-y-4 flex-1">
-                            <div className="bg-gray-900 p-3 rounded-lg text-white font-mono text-sm relative group">
-                                {activeComp.example1.code}
-                            </div>
-
-                            <Button
-                                onClick={() => runSimulation(activeComp.example1.result)}
-                                variant="outline"
-                                size="sm"
-                                className="w-full border-dashed border-gray-300 hover:border-primary hover:text-primary"
-                            >
-                                <Play className="mr-2 h-3 w-3" /> Run Code
-                            </Button>
-
-                            {runOutput === activeComp.example1.result && (
-                                <div className="bg-black text-green-400 font-mono text-sm p-3 rounded-lg border-l-4 border-green-500 animate-in fade-in slide-in-from-top-2">
-                                    <div className="text-[10px] text-gray-500 uppercase mb-1">Output</div>
-                                    {runOutput}
-                                </div>
-                            )}
-
-                            <div className="flex gap-2 items-start text-sm text-gray-600 bg-gray-50 p-3 rounded-lg mt-auto">
-                                <span className="text-blue-500 font-bold">Note:</span>
-                                {activeComp.example1.note}
-                            </div>
+                        <div>
+                            <div className="text-xs font-bold text-indigo-200 uppercase tracking-widest mb-1">Comparison Result</div>
+                            <h3 className="text-2xl font-black">{result.title}</h3>
                         </div>
                     </div>
 
-                    {/* Method 2 Card */}
-                    <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow flex flex-col">
-                        <div className="bg-gray-50 p-4 border-b border-gray-200 text-center font-bold text-gray-700 font-mono">
-                            {activeComp.method2}
-                        </div>
-                        <div className="p-6 space-y-4 flex-1">
-                            <div className="bg-gray-900 p-3 rounded-lg text-white font-mono text-sm">
-                                {activeComp.example2.code}
+                    <div className="p-8 grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div>
+                            <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                <Sparkles className="h-4 w-4 text-indigo-500" /> Explanation
+                            </h4>
+                            <p className="text-gray-600 leading-relaxed mb-6">
+                                {result.explanation}
+                            </p>
+
+                            <div className="bg-amber-50 p-4 rounded-xl border border-amber-100">
+                                <h5 className="text-xs font-bold text-amber-600 uppercase tracking-widest mb-2">Key Distinction</h5>
+                                <p className="text-gray-800 font-medium">
+                                    {result.keyDistinction}
+                                </p>
                             </div>
+                        </div>
 
-                            <Button
-                                onClick={() => runSimulation(activeComp.example2.result)}
-                                variant="outline"
-                                size="sm"
-                                className="w-full border-dashed border-gray-300 hover:border-primary hover:text-primary"
-                            >
-                                <Play className="mr-2 h-3 w-3" /> Run Code
-                            </Button>
-
-                            {runOutput === activeComp.example2.result && (
-                                <div className="bg-black text-green-400 font-mono text-sm p-3 rounded-lg border-l-4 border-green-500 animate-in fade-in slide-in-from-top-2">
-                                    <div className="text-[10px] text-gray-500 uppercase mb-1">Output</div>
-                                    {runOutput}
-                                </div>
-                            )}
-
-                            <div className="flex gap-2 items-start text-sm text-gray-600 bg-gray-50 p-3 rounded-lg mt-auto">
-                                <span className="text-blue-500 font-bold">Note:</span>
-                                {activeComp.example2.note}
+                        <div>
+                            <h4 className="font-bold text-gray-900 mb-3 flex items-center gap-2">
+                                <Code2 className="h-4 w-4 text-green-500" /> Code Example
+                            </h4>
+                            <div className="bg-[#1e1e24] p-4 rounded-xl overflow-auto border border-gray-800 shadow-inner">
+                                <pre className="font-mono text-sm text-gray-300 whitespace-pre-wrap">
+                                    <code>{result.codeExample}</code>
+                                </pre>
                             </div>
                         </div>
                     </div>
                 </div>
+            )}
 
-            </div>
+            {!result && !loading && !error && (
+                <div className="text-center text-gray-400 py-12 border-2 border-dashed border-gray-200 rounded-2xl bg-gray-50/50">
+                    <SplitSquareHorizontal className="h-12 w-12 mx-auto mb-4 opacity-20" />
+                    <p className="font-medium">Enter two methods above to see the magic.</p>
+                </div>
+            )}
 
         </div>
     )

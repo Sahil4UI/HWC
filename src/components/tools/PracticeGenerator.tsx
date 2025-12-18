@@ -20,21 +20,32 @@ const questionsBank = [
     { id: 10, topic: "Loops", difficulty: "Hard", question: "Create a nested loop pattern to print a pyramid of stars." },
 ]
 
+import { generatePracticeAction } from "@/app/actions/gemini"
+
 export function PracticeGenerator() {
     const [selectedTopic, setSelectedTopic] = useState("Loops")
     const [selectedDiff, setSelectedDiff] = useState("Easy")
-    const [generatedQuestions, setGeneratedQuestions] = useState<typeof questionsBank>([])
+    const [generatedQuestions, setGeneratedQuestions] = useState<any[]>([])
+    const [isLoading, setIsLoading] = useState(false)
 
-    const generate = () => {
-        // Filter logic
-        let filtered = questionsBank.filter(q => q.topic === selectedTopic && q.difficulty === selectedDiff)
+    const generate = async () => {
+        setIsLoading(true)
+        setGeneratedQuestions([]) // clear previous
 
-        // Fallback for demo if no questions match
-        if (filtered.length === 0) {
-            filtered = [{ id: 99, topic: selectedTopic, difficulty: selectedDiff, question: `Coming soon: More ${selectedDiff} questions for ${selectedTopic}!` }]
+        const response = await generatePracticeAction(selectedTopic, selectedDiff)
+
+        if (response.success && response.data) {
+            setGeneratedQuestions(response.data)
+        } else {
+            // Fallback for demo if API fails
+            setGeneratedQuestions([{
+                id: 99,
+                topic: selectedTopic,
+                difficulty: selectedDiff,
+                question: `Error: ${response.error || "AI busy"}. (Mock Question: Write code for ${selectedTopic}...)`
+            }])
         }
-
-        setGeneratedQuestions(filtered)
+        setIsLoading(false)
     }
 
     return (
@@ -96,8 +107,8 @@ export function PracticeGenerator() {
                                     <div className="flex gap-2 mb-2">
                                         <span className="text-[10px] font-bold uppercase bg-gray-100 px-2 py-0.5 rounded text-gray-500">{q.topic}</span>
                                         <span className={`text-[10px] font-bold uppercase px-2 py-0.5 rounded ${q.difficulty === "Easy" ? "bg-green-100 text-green-700" :
-                                                q.difficulty === "Medium" ? "bg-yellow-100 text-yellow-700" :
-                                                    "bg-red-100 text-red-700"
+                                            q.difficulty === "Medium" ? "bg-yellow-100 text-yellow-700" :
+                                                "bg-red-100 text-red-700"
                                             }`}>{q.difficulty}</span>
                                     </div>
                                     <p className="text-gray-800 font-medium">{q.question}</p>

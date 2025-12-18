@@ -1,6 +1,8 @@
 import { Navbar } from "@/components/layout/Navbar"
 import { ParticleBackground } from "@/components/ui/ParticleBackground"
-import { Sparkles, Terminal } from "lucide-react"
+import { Terminal } from "lucide-react"
+import { BLOGS } from "@/data/blogs"
+import { BlogCard } from "@/components/blogs/BlogCard"
 
 export const metadata = {
     title: "Blogs | Hello World Classes",
@@ -23,13 +25,10 @@ export default function BlogsPage() {
                     </h1>
                 </div>
 
-                <div className="max-w-4xl mx-auto space-y-8">
-                    <div className="bg-white/5 border border-white/10 rounded-none p-12 text-center text-slate-400 relative overflow-hidden group hover:border-primary/50 transition-all">
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                        <Sparkles className="h-12 w-12 mx-auto mb-4 text-primary opacity-50 group-hover:opacity-100 group-hover:scale-110 transition-all" />
-                        <h3 className="text-xl font-bold text-white mb-2 font-heading uppercase tracking-widest">Incoming Transmission</h3>
-                        <p className="font-mono text-sm">New articles coming soon. Stay tuned!</p>
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-7xl mx-auto">
+                    {BLOGS.map(post => (
+                        <BlogCard key={post.id} post={post} />
+                    ))}
                 </div>
             </div>
         </div>

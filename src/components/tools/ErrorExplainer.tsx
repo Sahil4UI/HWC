@@ -56,36 +56,35 @@ const errorRules = [
     }
 ]
 
+import { explainErrorAction } from "@/app/actions/gemini"
+
 export function ErrorExplainer() {
     const [input, setInput] = useState("")
     const [result, setResult] = useState<{ title: string; severity: string; explanation: string; fix: string } | null>(null)
     const [isAnalyzing, setIsAnalyzing] = useState(false)
+    const [error, setError] = useState("")
 
-    const handleExplain = () => {
+    const handleExplain = async () => {
         if (!input.trim()) return
         setIsAnalyzing(true)
         setResult(null)
+        setError("")
 
-        setTimeout(() => {
-            const foundError = errorRules.find(rule => rule.regex.test(input))
+        const response = await explainErrorAction(input)
 
-            if (foundError) {
-                setResult({
-                    title: foundError.title,
-                    severity: foundError.severity,
-                    explanation: foundError.explanation,
-                    fix: foundError.fix
-                })
-            } else {
-                setResult({
-                    title: "Unknown Error",
-                    severity: "Unknown",
-                    explanation: "We couldn't match a specific pattern, but looking at the traceback usually helps.",
-                    fix: "Copy the VERY LAST line of the error message and try again."
-                })
-            }
-            setIsAnalyzing(false)
-        }, 600)
+        if (response.success && response.data) {
+            setResult(response.data)
+        } else {
+            setError(response.error || "Something went wrong. Try again.")
+            // Fallback to "Unknown Error" generic state if strict needed
+            setResult({
+                title: "AI Analysis Failed",
+                severity: "Unknown",
+                explanation: "Our AI brain is disconnected. check API Key.",
+                fix: "Try adding GEMINI_API_KEY to .env.local"
+            })
+        }
+        setIsAnalyzing(false)
     }
 
     return (
@@ -124,7 +123,7 @@ export function ErrorExplainer() {
                                 <h3 className="text-2xl font-bold font-mono text-red-400">{result.title}</h3>
                             </div>
                             <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase ${result.severity === "High" ? "bg-red-500/20 text-red-300 border border-red-500/30" :
-                                    "bg-yellow-500/20 text-yellow-300 border border-yellow-500/30"
+                                "bg-yellow-500/20 text-yellow-300 border border-yellow-500/30"
                                 }`}>
                                 Severity: {result.severity}
                             </span>
