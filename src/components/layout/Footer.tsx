@@ -1,54 +1,87 @@
 import Link from "next/link"
 import Image from "next/image"
-import { Youtube, Instagram, Twitter } from "lucide-react"
+import { Youtube, Mail, Phone, MapPin } from "lucide-react"
+import { Button } from "@/components/ui/Button"
 
 export function Footer() {
     return (
-        <footer className="bg-black border-t border-white/10 py-12 relative z-50">
+        <footer className="bg-black border-t border-white/10 pt-16 pb-8 relative z-50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="flex flex-col md:flex-row justify-between items-center gap-8">
 
-                    <div className="text-center md:text-left">
-                        <div className="relative w-32 h-8 sm:w-48 sm:h-12 md:w-64 md:h-16 mx-auto md:mx-0 mb-4">
+                {/* Main Grid Layout */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+
+                    {/* Brand Section */}
+                    <div className="space-y-4">
+                        <div className="relative w-40 h-10">
                             <Image
                                 src="/logo-main.png"
                                 alt="Hello World Classes"
                                 fill
-                                className="object-contain object-center md:object-left"
+                                className="object-contain object-left"
                             />
                         </div>
-                        <p className="text-sm text-slate-400 mt-2 font-mono max-w-xs">
-                            Hello World Classes is an online learning platform focused on coding education, Python tutorials, programming tools, and career-oriented tech skills for Indian students.
+                        <p className="text-sm text-slate-400 font-mono leading-relaxed">
+                            Empowering Indian students with free, high-quality coding education. Master Python, Web Dev, and C++ with us.
                         </p>
                     </div>
 
-                    <div className="flex flex-col gap-4">
-                        <Link href="https://www.youtube.com/@HelloWorldClasses" target="_blank" className="flex items-center gap-3 text-slate-400 hover:text-red-500 transition-colors group">
-                            <span className="p-2 bg-white/5 rounded-full group-hover:bg-red-500/10 transition-colors">
-                                <Youtube className="w-5 h-5" />
-                            </span>
-                            <span className="font-bold uppercase tracking-wider text-xs">Youtube Channel</span>
-                        </Link>
-
-                        <div className="flex flex-col gap-2 mt-2">
-                            <h4 className="text-xs font-bold text-primary uppercase tracking-widest mb-1">Contact</h4>
-                            <a href="mailto:info@helloworldclasses.com" className="text-sm text-slate-400 hover:text-white transition-colors font-mono">
-                                info@helloworldclasses.com
-                            </a>
-                            <a href="tel:+918383045956" className="text-sm text-slate-400 hover:text-white transition-colors font-mono">
-                                +91 8383045956
-                            </a>
-                        </div>
+                    {/* Quick Links */}
+                    <div>
+                        <h3 className="text-white font-bold uppercase tracking-widest mb-6 text-sm">Platform</h3>
+                        <ul className="space-y-3 text-sm text-slate-400 font-mono">
+                            <li><Link href="/tools" className="hover:text-primary transition-colors">Practice Arena</Link></li>
+                            <li><Link href="/courses" className="hover:text-primary transition-colors">Python Course</Link></li>
+                            <li><Link href="/notes" className="hover:text-primary transition-colors">Lecture Notes</Link></li>
+                            <li><Link href="/typing" className="hover:text-primary transition-colors">Typing Test</Link></li>
+                        </ul>
                     </div>
 
-                    <div className="flex flex-col gap-4 text-sm text-slate-400 font-mono text-right">
-                        <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-                        <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+                    {/* Contact Info */}
+                    <div>
+                        <h3 className="text-white font-bold uppercase tracking-widest mb-6 text-sm">Contact</h3>
+                        <ul className="space-y-4 text-sm text-slate-400 font-mono">
+                            <li className="flex items-start gap-3">
+                                <Mail className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                                <a href="mailto:info@helloworldclasses.com" className="hover:text-white transition-colors break-all">info@helloworldclasses.com</a>
+                            </li>
+                            <li className="flex items-center gap-3">
+                                <Phone className="w-4 h-4 text-primary shrink-0" />
+                                <a href="tel:+918383045956" className="hover:text-white transition-colors">+91 8383045956</a>
+                            </li>
+                            <li className="flex items-start gap-3">
+                                <MapPin className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+                                <span>New Delhi, India</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    {/* Connect / Social */}
+                    <div>
+                        <h3 className="text-white font-bold uppercase tracking-widest mb-6 text-sm">Community</h3>
+                        <div className="space-y-4">
+                            <Link href="https://www.youtube.com/@HelloWorldClasses" target="_blank">
+                                <Button className="w-full bg-red-600 hover:bg-red-700 text-white border-0 rounded-none clip-path-polygon flex items-center justify-center gap-2 group">
+                                    <Youtube className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                                    <span>YouTube Channel</span>
+                                </Button>
+                            </Link>
+                            <p className="text-xs text-slate-500">
+                                Join 50k+ students learning for free.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
-                <div className="mt-8 pt-8 border-t border-white/5 text-center text-xs text-slate-400 font-mono">
-                    &copy; {new Date().getFullYear()} Hello World Classes. <span className="text-primary font-bold">System Active.</span> All rights reserved.
+                {/* Bottom Bar */}
+                <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-500 font-mono">
+                    <div>
+                        &copy; {new Date().getFullYear()} Hello World Classes. All rights reserved.
+                    </div>
+                    <div className="flex gap-6">
+                        <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+                        <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+                    </div>
                 </div>
             </div>
         </footer>
