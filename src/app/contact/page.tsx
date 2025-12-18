@@ -59,7 +59,7 @@ export default function ContactPage() {
                             <label className="text-xs font-bold text-primary uppercase tracking-widest">Message</label>
                             <textarea className="w-full px-4 py-3 bg-black/50 border border-white/10 text-white rounded-none focus:outline-none focus:border-primary focus:shadow-[0_0_15px_rgba(0,243,255,0.3)] transition-all font-mono text-sm min-h-[150px] placeholder:text-slate-600" placeholder="How can we help?"></textarea>
                         </div>
-                        <button className="w-full bg-primary text-black font-black py-4 rounded-none hover:bg-white transition-colors border border-primary hover:border-white shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.6)] uppercase tracking-widest clip-path-polygon transform hover:-translate-y-1 duration-300">
+                        <button className="w-full bg-primary text-white font-black py-4 rounded-none hover:bg-white hover:text-black transition-colors border border-primary hover:border-white shadow-[0_0_20px_rgba(0,243,255,0.4)] hover:shadow-[0_0_30px_rgba(255,255,255,0.6)] uppercase tracking-widest clip-path-polygon transform hover:-translate-y-1 duration-300">
                             Send Message
                         </button>
                     </form>
