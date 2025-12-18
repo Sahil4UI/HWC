@@ -110,7 +110,7 @@ export function PracticeEngine() {
                     <button
                         key={tech.id}
                         onClick={() => { setActiveTech(tech); setActiveQuestion(tech.topics[0].questions[0]); setCode(tech.topics[0].questions[0].initialCode || ""); }}
-                        className={`flex items - center gap - 2 px - 6 py - 3 rounded - xl transition - all font - bold tracking - wide relative overflow - hidden group ${
+                        className={`flex items-center gap-2 px-6 py-3 rounded-xl transition-all font-bold tracking-wide relative overflow-hidden group ${
     activeTech.id === tech.id
         ? 'bg-white text-black shadow-lg scale-100'
         : 'text-slate-400 hover:text-white hover:bg-white/10'
@@ -138,7 +138,7 @@ export function PracticeEngine() {
                             <span className="text-xs text-white font-mono bg-white/10 px-2 py-1 rounded">{solvedCount}/{totalQuestions}</span>
                         </div>
                         <div className="h-2 w-full bg-black/60 rounded-full overflow-hidden border border-white/5">
-                            <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-700 ease-out" style={{ width: `${ progressPercent }% ` }}></div>
+                            <div className="h-full bg-gradient-to-r from-blue-500 to-purple-500 transition-all duration-700 ease-out" style={{ width: `${ progressPercent}%` }}></div>
                         </div>
                     </div>
 
@@ -148,7 +148,7 @@ export function PracticeEngine() {
                             <div key={topic.title} className="mb-2">
                                 <button 
                                     onClick={() => setExpandedTopic(expandedTopic === topic.title ? "" : topic.title)}
-                                    className={`flex items - center w - full text - left p - 3 rounded - lg text - sm font - bold transition - all ${ expandedTopic === topic.title ? 'bg-white/5 text-white' : 'text-slate-500 hover:text-slate-300' } `}
+                                    className={`flex items-center w-full text-left p-3 rounded-lg text-sm font-bold transition-all ${ expandedTopic === topic.title ? 'bg-white/5 text-white' : 'text-slate-500 hover:text-slate-300' } `}
                                 >
                                     {expandedTopic === topic.title ? <ChevronDown className="h-4 w-4 mr-2" /> : <ChevronRight className="h-4 w-4 mr-2 opacity-50" />}
                                     {topic.title}
@@ -162,7 +162,7 @@ export function PracticeEngine() {
                                                 <button 
                                                     key={q.id}
                                                     onClick={() => handleQuestionSelect(q)}
-                                                    className={`group flex items - center justify - between w - full text - left px - 3 py - 2 rounded - md text - xs transition - all ${
+                                                    className={`group flex items-center justify-between w-full text-left px-3 py-2 rounded-md text-xs transition-all ${
     activeQuestion.id === q.id
         ? 'bg-gradient-to-r from-blue-600/20 to-purple-600/20 text-blue-300 font-bold border border-blue-500/30'
         : 'text-slate-400 hover:text-white hover:bg-white/5'
@@ -190,7 +190,7 @@ export function PracticeEngine() {
                                 {activeQuestion.title}
                                 {solvedIds.includes(activeQuestion.id) && <span className="bg-green-500/20 text-green-400 text-[10px] px-2 py-1 rounded-full uppercase tracking-wider font-bold border border-green-500/20">Solved</span>}
                             </h2>
-                            <span className={`px - 3 py - 1 rounded - full text - [10px] font - bold uppercase tracking - widest border shadow - lg ${
+                            <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-widest border shadow-lg ${
     activeQuestion.difficulty === 'Easy' ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20 shadow-emerald-900/20' :
         activeQuestion.difficulty === 'Medium' ? 'bg-amber-500/10 text-amber-400 border-amber-500/20 shadow-amber-900/20' :
             'bg-rose-500/10 text-rose-400 border-rose-500/20 shadow-rose-900/20'
@@ -263,7 +263,7 @@ export function PracticeEngine() {
                                      <span className="text-slate-600 font-mono">Expected: <span className="text-emerald-500/70">{activeQuestion.expectedOutput?.replace(/\n/g, ' ')}</span></span>
                                  </div>
                                  <div className="flex-1 p-4 overflow-auto scrollbar-thin scrollbar-thumb-white/10">
-                                     <pre className={`font - mono text - xs leading - relaxed ${ status === 'incorrect' && output ? 'text-rose-400' : status === 'SUCCESS' ? 'text-emerald-400' : 'text-slate-300' } `}>
+                                     <pre className={`font-mono text-xs leading-relaxed ${ status === 'incorrect' && output ? 'text-rose-400' : status === 'SUCCESS' ? 'text-emerald-400' : 'text-slate-300' } `}>
                                          {output || <span className="text-slate-700 italic opacity-50">Run code to see output...</span>}
                                      </pre>
                                  </div>
@@ -272,7 +272,7 @@ export function PracticeEngine() {
                     </div>
 
                     {/* Status Bar */}
-                     <div className={`absolute bottom - 6 right - 6 px - 6 py - 3 rounded - xl shadow - 2xl border flex items - center gap - 3 transition - all duration - 500 transform ${
+                     <div className={`absolute bottom-6 right-6 px-6 py-3 rounded-xl shadow-2xl border flex items-center gap-3 transition-all duration-500 transform ${
     status === 'SUCCESS' ? 'translate-y-0 opacity-100 bg-emerald-500 text-black border-emerald-400' :
         status === 'incorrect' ? 'translate-y-0 opacity-100 bg-rose-600 text-white border-rose-500' :
             'translate-y-10 opacity-0'

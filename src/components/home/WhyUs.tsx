@@ -60,7 +60,9 @@ export function WhyUs() {
                             <span className="text-transparent bg-clip-text bg-gradient-to-r from-white via-[#00F3FF] to-green-400 glitch-text" data-text="HELLO WORLD?">HELLO WORLD?</span>
                         </h2>
                         <p className="text-slate-400 mb-8 text-lg font-mono leading-relaxed">
-                            We are not another corporate ed-tech giant. We are a <span className="text-white font-bold">community built by teachers</span> who care about your growth.
+                            <strong className="text-white">Hello World Classes (HWC)</strong> is not just another ed-tech platform. We are India's premier destination for breaking into tech.
+                            Whether you search for "Hello World" to start your journey or want to master styling with CSS, HWC offers free, high-quality coding classes tailored for you.
+                            We are a <span className="text-white font-bold">community built by teachers</span> who care about your growth.
                         </p>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

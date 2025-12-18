@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     template: "%s | Hello World Classes"
   },
   description: "Learn Python, Web Development, and AI for free in Hindi/Hinglish. Join the best coding community for Indian students. No jargon, just practical skills.",
-  keywords: ["Free Coding Course", "Python in Hindi", "Web Development Course Free", "React JS Hindi", "Learn Coding India", "Hello World Classes", "Full Stack Development", "Data Analytics Hindi"],
+  keywords: ["Free Coding Course", "Python in Hindi", "Web Development Course Free", "React JS Hindi", "Learn Coding India", "Hello World Classes", "HWC", "Hello World Course", "Practice Arena", "Full Stack Development", "Data Analytics Hindi"],
   authors: [{ name: "Hello World Classes Team" }],
   creator: "Hello World Classes",
   publisher: "Hello World Classes",
