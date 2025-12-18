@@ -1,5 +1,5 @@
 import { Navbar } from "@/components/layout/Navbar"
-import { Mail, MessageCircle, MapPin, Sparkles } from "lucide-react"
+import { Mail, Phone, Youtube, Sparkles } from "lucide-react"
 import { ParticleBackground } from "@/components/ui/ParticleBackground"
 
 export const metadata = {
@@ -29,17 +29,17 @@ export default function ContactPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                         {[
-                            { icon: Mail, title: "Email", value: "support@helloworld.com" },
-                            { icon: MessageCircle, title: "Discord", value: "Join our community" },
-                            { icon: MapPin, title: "Location", value: "Online Everywhere" }
+                            { icon: Mail, title: "Email", value: "info@helloworldclasses.com", link: "mailto:info@helloworldclasses.com" },
+                            { icon: Phone, title: "Phone", value: "+91 8383045956", link: "tel:+918383045956" },
+                            { icon: Youtube, title: "YouTube", value: "@HelloWorldClasses", link: "https://www.youtube.com/@HelloWorldClasses" }
                         ].map((item, i) => (
-                            <div key={i} className="bg-white/5 p-6 rounded-none text-center border border-white/10 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group">
+                            <a href={item.link} key={i} target={i === 2 ? "_blank" : undefined} className="bg-white/5 p-6 rounded-none text-center border border-white/10 hover:border-primary/50 hover:bg-primary/5 transition-all duration-300 group block">
                                 <div className="bg-black w-12 h-12 flex items-center justify-center mx-auto mb-4 text-primary border border-primary/30 group-hover:scale-110 transition-transform shadow-[0_0_15px_rgba(0,243,255,0.2)]">
                                     <item.icon className="h-5 w-5" />
                                 </div>
                                 <h3 className="font-bold mb-1 text-white font-heading tracking-wide uppercase">{item.title}</h3>
                                 <p className="text-xs text-slate-400 font-mono">{item.value}</p>
-                            </div>
+                            </a>
                         ))}
                     </div>
 

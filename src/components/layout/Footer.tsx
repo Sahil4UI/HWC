@@ -22,21 +22,28 @@ export function Footer() {
                         </p>
                     </div>
 
-                    <div className="flex gap-6">
-                        <Link href="https://www.youtube.com/@HelloWorldClasses" target="_blank" aria-label="YouTube" className="p-2 bg-white/5 rounded-none text-slate-400 hover:text-red-500 hover:bg-red-500/10 transition-all border border-transparent hover:border-red-500/50">
-                            <Youtube className="w-5 h-5" />
+                    <div className="flex flex-col gap-4">
+                        <Link href="https://www.youtube.com/@HelloWorldClasses" target="_blank" className="flex items-center gap-3 text-slate-400 hover:text-red-500 transition-colors group">
+                            <span className="p-2 bg-white/5 rounded-full group-hover:bg-red-500/10 transition-colors">
+                                <Youtube className="w-5 h-5" />
+                            </span>
+                            <span className="font-bold uppercase tracking-wider text-xs">Youtube Channel</span>
                         </Link>
-                        <Link href="#" aria-label="Instagram" className="p-2 bg-white/5 rounded-none text-slate-400 hover:text-pink-500 hover:bg-pink-500/10 transition-all border border-transparent hover:border-pink-500/50">
-                            <Instagram className="w-5 h-5" />
-                        </Link>
-                        <Link href="#" aria-label="Twitter" className="p-2 bg-white/5 rounded-none text-slate-400 hover:text-blue-400 hover:bg-blue-400/10 transition-all border border-transparent hover:border-blue-400/50">
-                            <Twitter className="w-5 h-5" />
-                        </Link>
+
+                        <div className="flex flex-col gap-2 mt-2">
+                            <h4 className="text-xs font-bold text-primary uppercase tracking-widest mb-1">Contact</h4>
+                            <a href="mailto:info@helloworldclasses.com" className="text-sm text-slate-400 hover:text-white transition-colors font-mono">
+                                info@helloworldclasses.com
+                            </a>
+                            <a href="tel:+918383045956" className="text-sm text-slate-400 hover:text-white transition-colors font-mono">
+                                +91 8383045956
+                            </a>
+                        </div>
                     </div>
 
-                    <div className="flex gap-6 text-sm text-slate-400 font-mono">
-                        <Link href="/privacy" className="hover:text-shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all uppercase tracking-wider">Privacy Protocol</Link>
-                        <Link href="/terms" className="hover:text-shadow-[0_0_10px_rgba(255,255,255,0.5)] transition-all uppercase tracking-wider">Terms of Service</Link>
+                    <div className="flex flex-col gap-4 text-sm text-slate-400 font-mono text-right">
+                        <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
+                        <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
                     </div>
                 </div>
 
