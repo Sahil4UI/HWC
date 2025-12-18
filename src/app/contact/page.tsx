@@ -38,7 +38,7 @@ export default function ContactPage() {
                                     <item.icon className="h-5 w-5" />
                                 </div>
                                 <h3 className="font-bold mb-1 text-white font-heading tracking-wide uppercase">{item.title}</h3>
-                                <p className="text-xs text-slate-400 font-mono">{item.value}</p>
+                                <p className="text-xs text-slate-400 font-mono break-words w-full">{item.value}</p>
                             </a>
                         ))}
                     </div>
