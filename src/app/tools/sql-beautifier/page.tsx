@@ -73,7 +73,6 @@ export default function SqlBeautifier() {
                     <div className="flex gap-2">
                         <Button
                             onClick={handleClear}
-                            align="center"
                             variant="outline"
                             className="border-red-500/30 text-red-400 hover:bg-red-500/10"
                         >
