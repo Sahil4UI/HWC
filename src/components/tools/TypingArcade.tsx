@@ -22,24 +22,37 @@ export function TypingArcade() {
     // Visual FX State
     const [shake, setShake] = useState(false)
 
+    // Particles State
+    const [particles, setParticles] = useState<Particle[]>([])
+
     // Refs
     const gameInputRef = useRef<HTMLInputElement>(null)
     const gameLoopRef = useRef<NodeJS.Timeout | null>(null)
 
-    // --- EFFECT: Focus Management ---
+    // --- EFFECT: Focus Update ---
     useEffect(() => {
-        if (selectedGame && isActive) {
-            gameInputRef.current?.focus()
+        if (isActive) {
+            // Force focus
+            setTimeout(() => gameInputRef.current?.focus(), 50)
         }
-    }, [selectedGame, isActive])
+    }, [isActive])
 
     // --- EFFECT: Game Loop ---
     useEffect(() => {
         if (selectedGame && isActive && !isFinished) {
             gameLoopRef.current = setInterval(() => {
+                const now = Date.now()
+
+                // Update Particles
+                setParticles(prev => prev.map(p => ({
+                    ...p,
+                    x: p.x + p.vx,
+                    y: p.y + p.vy,
+                    life: p.life - 0.05
+                })).filter(p => p.life > 0))
+
                 setEntities(prev => {
                     let next = [...prev]
-                    const now = Date.now()
 
                     // --- MOVEMENT & LOSS LOGIC ---
 
@@ -62,7 +75,7 @@ export function TypingArcade() {
 
                     // 3. GLYPH HUNTER: Move Down Slowly
                     if (selectedGame === 'GLYPH_HUNTER') {
-                        const speed = 0.2 + (gameLevel * 0.05)
+                        const speed = 0.15 + (gameLevel * 0.05)
                         next = next.map(e => ({ ...e, y: e.y + speed }))
                         const breached = next.filter(e => e.y > 90)
                         if (breached.length > 0) loseLife(1)
@@ -91,7 +104,7 @@ export function TypingArcade() {
                             selectedGame === 'BIT_BOSS' ? 2 + Math.ceil(gameLevel / 2) : 5 + gameLevel
 
                     const baseRate = selectedGame === 'NEON_RUSH' ? 0.04 :
-                        selectedGame === 'GLYPH_HUNTER' ? 0.02 :
+                        selectedGame === 'GLYPH_HUNTER' ? 0.015 :
                             selectedGame === 'COSMIC_ZEN' ? 0.015 : 0.02
 
                     const spawnRate = baseRate + (gameLevel * 0.005)
@@ -99,14 +112,15 @@ export function TypingArcade() {
                     if (Math.random() < spawnRate && next.length < maxEntities) {
                         let wordList: string[] = []
 
+                        // Game Word Dictionaries
                         if (selectedGame === 'GLYPH_HUNTER') {
-                            wordList = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "cat", "dog", "fun", "run"]
+                            wordList = ["a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
                         } else if (selectedGame === 'BIT_BOSS') {
-                            wordList = ["sudo", "rm -rf", "kill", "process", "daemon", "kernel", "buffer", "memory", "stack", "overflow", "syntax", "error", "fatal", "null", "void", "panic", "abort", "retry", "catch", "throw"]
+                            wordList = ["hack", "code", "node", "java", "ruby", "rust", "perl", "bash", "root", "user", "pass", "keys", "host", "port", "ipv4", "ipv6", "data", "file", "disk", "bios"]
                         } else if (selectedGame === 'COSMIC_ZEN') {
-                            wordList = ["breathe", "flow", "calm", "space", "star", "moon", "galaxy", "nebula", "orbit", "drift", "pulse", "glow", "shine", "peace", "zen", "mind", "soul", "light"]
+                            wordList = ["sky", "sun", "sea", "air", "dew", "fog", "ice", "gem", "joy", "art", "ray", "arc", "hue", "zen", "orb", "now", "fly", "see"]
                         } else {
-                            wordList = ["run", "hit", "bug", "zap", "zip", "exe", "bin", "hex", "ram", "cpu", "gpu", "net", "web", "bot", "git", "bash", "sudo", "echo", "void", "null", "true", "false", "init", "load", "kill", "exit"]
+                            wordList = ["exe", "bin", "opt", "var", "tmp", "dev", "usr", "lib", "etc", "sys", "proc", "run", "log", "man", "git", "ssh", "ftp", "www", "com", "net", "org"]
                         }
 
                         const word = wordList[Math.floor(Math.random() * wordList.length)]
@@ -139,6 +153,22 @@ export function TypingArcade() {
     }, [isActive, selectedGame, gameLevel])
 
     // --- HELPER HANDLERS ---
+    const createExplosion = (x: number, y: number, color: string) => {
+        const newParticles = []
+        for (let i = 0; i < 12; i++) {
+            newParticles.push({
+                id: Math.random(),
+                x,
+                y,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                color,
+                life: 1.0
+            })
+        }
+        setParticles(prev => [...prev, ...newParticles])
+    }
+
     const loseLife = (amount: number) => {
         setGameLives(prev => {
             const newVal = prev - amount
@@ -158,29 +188,43 @@ export function TypingArcade() {
         if (gameLoopRef.current) clearInterval(gameLoopRef.current)
     }
 
-    const reset = () => {
-        setIsActive(false)
+    const startGame = (type: GameType) => {
+        // Correctly initialize state synchronously-ish
+        setSelectedGame(type)
+        setIsActive(true)
         setIsFinished(false)
         setGameScore(0)
-        setGameLives(selectedGame === 'GLYPH_HUNTER' ? 5 : 3)
+        setGameLives(type === 'GLYPH_HUNTER' ? 5 : 3)
         setGameLevel(1)
         setGameInput("")
         setEntities([])
+        setParticles([])
         setBossHp(100)
 
-        if (selectedGame) {
-            setIsActive(true)
-            setTimeout(() => gameInputRef.current?.focus(), 10)
-        }
+        // Focus hack
+        setTimeout(() => gameInputRef.current?.focus(), 100)
+    }
+
+    const reset = () => {
+        if (selectedGame) startGame(selectedGame)
     }
 
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value
         setGameInput(val)
 
-        const matchIdx = entities.findIndex(e => e.text === val.trim())
+        const matchIdx = entities.findIndex(e => e.text.toLowerCase() === val.trim().toLowerCase())
         if (matchIdx !== -1) {
             // HIT!
+            const target = entities[matchIdx]
+
+            // FX
+            const color = selectedGame === 'NEON_RUSH' ? '#22d3ee' :
+                selectedGame === 'GLYPH_HUNTER' ? '#4ade80' :
+                    selectedGame === 'BIT_BOSS' ? '#ef4444' : '#a855f7'
+
+            createExplosion(target.x, target.y, color)
+
             setEntities(prev => prev.filter((_, i) => i !== matchIdx))
             setGameScore(s => s + (10 * gameLevel))
             setGameInput("")
@@ -191,6 +235,10 @@ export function TypingArcade() {
                     const newHp = prev - damage
                     if (newHp <= 0) {
                         setGameLevel(l => l + 1)
+                        // Boss Explosion
+                        createExplosion(50, 20, '#ff0000')
+                        createExplosion(45, 25, '#ff0000')
+                        createExplosion(55, 15, '#ff0000')
                         return 100
                     }
                     return newHp
@@ -236,35 +284,35 @@ export function TypingArcade() {
                 {!selectedGame ? (
                     // Game Selection Menu
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto animate-in fade-in zoom-in">
-                        <button onClick={() => { setSelectedGame('CYBER_DEFENSE'); setTimeout(reset, 0); }} className="game-card border-purple-500/30 hover:border-purple-500 hover:shadow-purple-500/20 group">
+                        <button onClick={() => startGame('CYBER_DEFENSE')} className="game-card border-purple-500/30 hover:border-purple-500 hover:shadow-purple-500/20 group">
                             <div className="game-icon bg-purple-500/10 group-hover:bg-purple-500/20"><Shield className="w-12 h-12 text-purple-500" /></div>
                             <h3 className="game-title">Cyber Defense</h3>
                             <p className="game-desc">Stop viruses from breaching the firewall. Classic mode.</p>
                             <span className="game-tag text-purple-300 bg-purple-500/20 border-purple-500/30">Balanced</span>
                         </button>
 
-                        <button onClick={() => { setSelectedGame('NEON_RUSH'); setTimeout(reset, 0); }} className="game-card border-cyan-500/30 hover:border-cyan-500 hover:shadow-cyan-500/20 group">
+                        <button onClick={() => startGame('NEON_RUSH')} className="game-card border-cyan-500/30 hover:border-cyan-500 hover:shadow-cyan-500/20 group">
                             <div className="game-icon bg-cyan-500/10 group-hover:bg-cyan-500/20"><Zap className="w-12 h-12 text-cyan-400" /></div>
                             <h3 className="game-title">Neon Rush</h3>
                             <p className="game-desc">Targets appear randomly and decay fast. Reflex test!</p>
                             <span className="game-tag text-cyan-300 bg-cyan-500/20 border-cyan-500/30">Fast Paced</span>
                         </button>
 
-                        <button onClick={() => { setSelectedGame('GLYPH_HUNTER'); setTimeout(reset, 0); }} className="game-card border-green-500/30 hover:border-green-500 hover:shadow-green-500/20 group">
+                        <button onClick={() => startGame('GLYPH_HUNTER')} className="game-card border-green-500/30 hover:border-green-500 hover:shadow-green-500/20 group">
                             <div className="game-icon bg-green-500/10 group-hover:bg-green-500/20"><Baby className="w-12 h-12 text-green-400" /></div>
                             <h3 className="game-title">Glyph Hunter</h3>
                             <p className="game-desc">Giant letters, slow speed. Perfect for kids & beginners.</p>
                             <span className="game-tag text-green-300 bg-green-500/20 border-green-500/30">Kids Mode</span>
                         </button>
 
-                        <button onClick={() => { setSelectedGame('BIT_BOSS'); setTimeout(reset, 0); }} className="game-card border-red-500/30 hover:border-red-500 hover:shadow-red-500/20 group">
+                        <button onClick={() => startGame('BIT_BOSS')} className="game-card border-red-500/30 hover:border-red-500 hover:shadow-red-500/20 group">
                             <div className="game-icon bg-red-500/10 group-hover:bg-red-500/20"><Swords className="w-12 h-12 text-red-500" /></div>
                             <h3 className="game-title">Bit Boss</h3>
                             <p className="game-desc">Defeat the Glitch King! Hard words, missiles, boss fights.</p>
                             <span className="game-tag text-red-300 bg-red-500/20 border-red-500/30">Hardcore</span>
                         </button>
 
-                        <button onClick={() => { setSelectedGame('COSMIC_ZEN'); setTimeout(reset, 0); }} className="game-card border-indigo-500/30 hover:border-indigo-500 hover:shadow-indigo-500/20 group md:col-span-2 lg:col-span-1">
+                        <button onClick={() => startGame('COSMIC_ZEN')} className="game-card border-indigo-500/30 hover:border-indigo-500 hover:shadow-indigo-500/20 group md:col-span-2 lg:col-span-1">
                             <div className="game-icon bg-indigo-500/10 group-hover:bg-indigo-500/20"><Sparkles className="w-12 h-12 text-indigo-400" /></div>
                             <h3 className="game-title">Cosmic Zen</h3>
                             <p className="game-desc">Endless flow in space. No Game Over. Just relax and type.</p>
@@ -276,7 +324,8 @@ export function TypingArcade() {
                     <div className={`relative h-[600px] w-full bg-[#050505] rounded-3xl border-2 overflow-hidden shadow-2xl transition-colors bg-grid-pattern
                         ${selectedGame === 'GLYPH_HUNTER' ? 'border-green-500/20' :
                             selectedGame === 'BIT_BOSS' ? 'border-red-500/20' :
-                                selectedGame === 'COSMIC_ZEN' ? 'border-indigo-500/20' : 'border-white/10'}`}>
+                                selectedGame === 'COSMIC_ZEN' ? 'border-indigo-500/20' : 'border-white/10'}`}
+                        onClick={() => gameInputRef.current?.focus()}>
 
                         <input
                             ref={gameInputRef}
@@ -336,6 +385,23 @@ export function TypingArcade() {
                                 </div>
                             </div>
                         )}
+                        {/* PARTICLES RENDER */}
+                        {particles.map(p => (
+                            <div
+                                key={p.id}
+                                className="absolute rounded-full pointer-events-none"
+                                style={{
+                                    left: `${p.x}%`,
+                                    top: `${p.y}%`,
+                                    width: '8px',
+                                    height: '8px',
+                                    backgroundColor: p.color,
+                                    opacity: p.life,
+                                    transform: 'translate(-50%, -50%)',
+                                    boxShadow: `0 0 10px ${p.color}`
+                                }}
+                            />
+                        ))}
 
                         {/* ENTITIES RENDER */}
                         {entities.map(e => (
