@@ -20,14 +20,7 @@ const tools = [
         category: "AI Power"
     },
     // Students
-    {
-        icon: <BookOpen className="h-8 w-8 text-black" />,
-        title: "Practice Arena (Test)",
-        desc: "Interactive coding & excel challenges. Master topics topic-by-topic.",
-        href: "/tools/assignment-generator", // Keeping same route for now
-        gradient: "from-green-400 to-emerald-600",
-        category: "Students"
-    },
+
     {
         icon: <Mic className="h-8 w-8 text-black" />,
         title: "Text to Speech",

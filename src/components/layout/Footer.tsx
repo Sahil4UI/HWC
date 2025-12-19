@@ -31,7 +31,7 @@ export function Footer() {
                     <div>
                         <h3 className="text-white font-bold uppercase tracking-widest mb-6 text-sm">Platform</h3>
                         <ul className="space-y-3 text-sm text-slate-400 font-mono">
-                            <li><Link href="/tools" className="hover:text-primary transition-colors">Practice Arena</Link></li>
+
                             <li><Link href="/courses" className="hover:text-primary transition-colors">Python Course</Link></li>
                             <li><Link href="/notes" className="hover:text-primary transition-colors">Lecture Notes</Link></li>
                             <li><Link href="/typing" className="hover:text-primary transition-colors">Typing Test</Link></li>
