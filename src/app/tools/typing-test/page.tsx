@@ -2,7 +2,7 @@ import { TypingTest } from "@/components/tools/TypingTest"
 import { ToolLayout } from "@/components/tools/ToolLayout"
 
 export const metadata = {
-    title: "Monkeytype Clone | Typing Speed Test",
+    title: "Typing Speed Test | Hello World Classes",
     description: "Test your typing speed (WPM) and accuracy with this minimalist, dark-themed typing tool.",
 }
 
