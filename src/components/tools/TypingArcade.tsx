@@ -5,6 +5,16 @@ import { RotateCcw, Gamepad2, Zap, Shield, Heart, Skull, Swords, Sparkles, Baby,
 
 type GameType = "CYBER_DEFENSE" | "NEON_RUSH" | "GLYPH_HUNTER" | "BIT_BOSS" | "COSMIC_ZEN" | null
 
+type Particle = {
+    id: number
+    x: number
+    y: number
+    vx: number
+    vy: number
+    color: string
+    life: number
+}
+
 export function TypingArcade() {
     // Arcade State
     const [selectedGame, setSelectedGame] = useState<GameType>(null)
@@ -154,7 +164,7 @@ export function TypingArcade() {
 
     // --- HELPER HANDLERS ---
     const createExplosion = (x: number, y: number, color: string) => {
-        const newParticles = []
+        const newParticles: Particle[] = []
         for (let i = 0; i < 12; i++) {
             newParticles.push({
                 id: Math.random(),
@@ -266,10 +276,10 @@ export function TypingArcade() {
                     100% { transform: translate(1px, -2px) rotate(-1deg); }
                 }
                 .animate-shake { animation: shake 0.5s; }
-                .game-card { @apply bg-black border rounded-3xl p-8 transition-all text-left relative overflow-hidden; }
+                .game-card { @apply bg-zinc-900/80 border border-white/10 rounded-3xl p-8 transition-all text-left relative overflow-hidden hover:scale-105 hover:bg-zinc-800 backdrop-blur-sm; }
                 .game-icon { @apply w-16 h-16 rounded-2xl flex items-center justify-center mb-6 transition-colors; }
                 .game-title { @apply text-2xl font-black text-white mb-2 italic; }
-                .game-desc { @apply text-slate-400 font-mono text-sm mb-6 h-12; }
+                .game-desc { @apply text-gray-300 font-mono text-sm mb-6 h-12; }
                 .game-tag { @apply text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded border; }
                 .btn-primary { @apply flex items-center bg-white text-black font-bold px-8 py-3 rounded-xl hover:scale-105 transition-transform; }
                 .btn-secondary { @apply flex items-center bg-transparent border border-white/20 text-white font-bold px-8 py-3 rounded-xl hover:bg-white/10 transition-colors; }
