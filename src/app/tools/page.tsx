@@ -282,6 +282,30 @@ export default function ToolsPage() {
                         ))}
                     </div>
                 </section>
+
+                {/* SEO Content Section */}
+                <section className="max-w-4xl mx-auto mt-24 text-left border-t border-white/10 pt-16">
+                    <h2 className="text-3xl font-bold text-white mb-8 font-heading">
+                        Professional Coding Tools tailored for <span className="text-primary">Hello World Classes</span> Students
+                    </h2>
+
+                    <div className="space-y-6 text-slate-400 font-mono text-sm leading-relaxed">
+                        <p>
+                            Welcome to the official <strong>Hello World Classes Developer Toolkit</strong>. We understand that learning to code is more than just watching tutorials—it's about doing. That's why we've built this suite of free, high-performance tools to assist you in your journey from a beginner to a full-stack developer.
+                        </p>
+
+                        <h3 className="text-xl font-bold text-white mt-8 mb-4">Why use our tools?</h3>
+                        <p>
+                            Unlike generic online utilities, our tools are built with the specific needs of computer science students and Indian developers in mind. Whether you need to <strong>clean up text for a project</strong>,
+                            <strong>convert HTML assignments to PDF</strong>, or <strong>test your typing speed</strong> for a coding interview, we have you covered.
+                        </p>
+
+                        <h3 className="text-xl font-bold text-white mt-8 mb-4">Integrate with our Courses</h3>
+                        <p>
+                            These tools are designed to complement our free courses on YouTube. Use the <strong>Code Playground</strong> to test snippets from our Python tutorials, or use the <strong>SQL Beautifier</strong> while following our Database Management System (DBMS) playlist. Everything is free, fast, and runs directly in your browser.
+                        </p>
+                    </div>
+                </section>
             </div>
         </div>
     )

@@ -258,9 +258,11 @@ export function HtmlPdfTool() {
 
                 {/* Preview Pane (Right) */}
                 <div
-                    ref={previewContainerRef}
                     className="w-1/2 bg-[#525659] flex items-start justify-center overflow-auto relative p-10 custom-scrollbar shadow-inner"
                 >
+                    <div className="absolute top-4 right-4 bg-black/50 text-white/50 text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded pointer-events-none z-10 border border-white/5">
+                        Live Preview
+                    </div>
                     {/* The Scale Wrapper */}
                     <div
                         style={{

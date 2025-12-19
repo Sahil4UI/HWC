@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ToolLayout } from "@/components/tools/ToolLayout"
+import { ToolContent } from "@/components/tools/ToolContent"
 import { Button } from "@/components/ui/Button"
 import { Eraser, Sparkles, Check, Copy, Wand2, Briefcase, Smile, Keyboard } from "lucide-react"
 import { cleanTextAction } from "@/app/actions/gemini"
@@ -120,6 +121,20 @@ export default function TextCleaner() {
                 </div>
 
             </div>
+
+            <ToolContent
+                toolName="AI Text Cleaner"
+                howToUse={[
+                    { title: "Input Text", desc: "Type any text, email draft, or messy paragraph." },
+                    { title: "Choose Action", desc: "Select 'Fix Grammar', 'Professional', or 'Simplify'." },
+                    { title: "Copy", desc: "Get the polished result instantly." }
+                ]}
+                whyUse={[
+                    "Professionalism: Send error-free emails and reports.",
+                    "Privacy: Text processing happens safely via our AI.",
+                    "Speed: Fix grammar faster than manual checking."
+                ]}
+            />
         </ToolLayout>
     )
 }

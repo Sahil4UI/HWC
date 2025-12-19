@@ -1,5 +1,6 @@
 import { LoopVisualizer } from "@/components/tools/LoopVisualizer"
 import { ToolLayout } from "@/components/tools/ToolLayout"
+import { ToolContent } from "@/components/tools/ToolContent"
 
 export const metadata = {
     title: "Loop Logic Visualizer | Hello World Classes",
@@ -14,6 +15,20 @@ export default function LoopVisualizerPage() {
             videoLink="https://youtube.com"
         >
             <LoopVisualizer />
+
+            <ToolContent
+                toolName="Loop Logic Visualizer"
+                howToUse={[
+                    { title: "Configure Loop", desc: "Choose For Loop or While Loop and set start/end values." },
+                    { title: "Step Through", desc: "Use the arrow keys or buttons to move step-by-step." },
+                    { title: "Visualize", desc: "Watch how variables (i, count) change in real-time." }
+                ]}
+                whyUse={[
+                    "Mental Model: 'See' the loop logic instead of just reading code.",
+                    "Debug Skills: Learn how execution flow jumps around.",
+                    "Beginner Friendly: Perfect for those stuck on iteration."
+                ]}
+            />
         </ToolLayout>
     )
 }

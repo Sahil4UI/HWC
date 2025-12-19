@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react"
 import { Button } from "@/components/ui/Button"
 import { Play, Pause, Square, Volume2, Mic, Languages, Download, Loader2 } from "lucide-react"
 import { downloadTTSAction } from "@/app/actions/tts"
@@ -14,14 +14,23 @@ export function TextToSpeech() {
     const [isDownloading, setIsDownloading] = useState(false)
     const [utterance, setUtterance] = useState<SpeechSynthesisUtterance | null>(null)
 
+    // Track if voices initialized
+    const voicesLoadedRef = useState(false) // actually use ref for strictness or just check length?
+    // Better: use a ref for "has set default"
+    const hasSetDefaultRef = useRef(false)
+
     useEffect(() => {
         const loadVoices = () => {
             const vs = window.speechSynthesis.getVoices()
             setVoices(vs)
-            // Default to Google Hindi or first found
-            const hindi = vs.find(v => v.lang.includes('hi') || v.name.includes('Hindi'))
-            if (hindi) setSelectedVoice(hindi.name)
-            else if (vs.length > 0) setSelectedVoice(vs[0].name)
+
+            // Only set default if we haven't yet, or if current selection is invalid
+            if (vs.length > 0 && !hasSetDefaultRef.current) {
+                const hindi = vs.find(v => v.lang.includes('hi') || v.name.includes('Hindi'))
+                if (hindi) setSelectedVoice(hindi.name)
+                else setSelectedVoice(vs[0].name)
+                hasSetDefaultRef.current = true
+            }
         }
 
         loadVoices()
@@ -29,21 +38,24 @@ export function TextToSpeech() {
     }, [])
 
     const handlePlay = () => {
-        if (isPaused) {
+        // If voice changed while paused/playing, we must restart!
+        const voiceChanged = utterance?.voice?.name !== selectedVoice
+
+        if (isPaused && !voiceChanged) {
             window.speechSynthesis.resume()
             setIsPaused(false)
             setIsSpeaking(true)
             return
         }
 
-        if (window.speechSynthesis.speaking) window.speechSynthesis.cancel()
+        // Cancel previous if speaking or if we need to restart due to voice change
+        window.speechSynthesis.cancel()
 
         const u = new SpeechSynthesisUtterance(text)
         const voice = voices.find(v => v.name === selectedVoice)
         if (voice) {
             u.voice = voice
-            // Slow down slightly for Hindi if needed, but default 1 is usually fine
-            // u.rate = 0.9 
+            u.lang = voice.lang // Explicitly sync lang
         }
 
         u.onend = () => {
@@ -54,6 +66,7 @@ export function TextToSpeech() {
         setUtterance(u)
         window.speechSynthesis.speak(u)
         setIsSpeaking(true)
+        setIsPaused(false)
     }
 
     const handlePause = () => {

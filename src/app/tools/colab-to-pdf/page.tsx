@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ToolLayout } from "@/components/tools/ToolLayout"
+import { ToolContent } from "@/components/tools/ToolContent"
 import { Button } from "@/components/ui/Button"
 import Link from "next/link"
 import { ArrowLeft, Printer, FileText, Code2, Copy, Check, Info } from "lucide-react"
@@ -127,6 +128,17 @@ export default function ColabPdfGuide() {
                 </section>
 
             </div>
+
+            <ToolContent
+                toolName="Colab to PDF Guide"
+                howToUse={[]} // Empty because the guide itself is the "How to"
+                whyUse={[
+                    "Solves the 'Cut-off Code' problem.",
+                    "No external software needed (Method 1).",
+                    "Professional formatting for assignments."
+                ]}
+            />
+
         </ToolLayout>
     )
 }

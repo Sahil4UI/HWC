@@ -61,8 +61,11 @@ export function WhyUs() {
                         </h2>
                         <p className="text-slate-400 mb-8 text-lg font-mono leading-relaxed">
                             <strong className="text-white">Hello World Classes (HWC)</strong> is not just another ed-tech platform. We are India's premier destination for breaking into tech.
-                            Whether you search for "Hello World" to start your journey or want to master styling with CSS, HWC offers free, high-quality coding classes tailored for you.
-                            We are a <span className="text-white font-bold">community built by teachers</span> who care about your growth.
+                            Founded with the mission to democratize education, we provide <strong>comprehensive free courses</strong> on
+                            <span className="text-white"> Python, Web Development, C++, and Data Structures</span>.
+
+                            Whether you are a college student looking for placement preparation or a beginner taking your first steps in coding, HWC offers crystal-clear explanations in <strong>Hindi and English</strong>.
+                            Our goal is simple: To turn "Hello World" into a high-paying career.
                         </p>
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">

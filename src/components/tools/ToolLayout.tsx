@@ -36,7 +36,7 @@ export function ToolLayout({ title, subtitle, children, videoLink, fullWidth = f
             </div>
 
             {/* Hero Section */}
-            <div className="relative pt-16 pb-12">
+            <div className="relative z-10 pt-16 pb-12">
                 <div className="container mx-auto px-4 text-center max-w-4xl">
                     <div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-purple-900/30 text-purple-400 text-[10px] font-bold tracking-widest uppercase mb-6 border border-purple-500/50 box-glow">
                         <Sparkles className="h-3 w-3" /> Interactive Module
@@ -82,6 +82,46 @@ export function ToolLayout({ title, subtitle, children, videoLink, fullWidth = f
                             </Button>
                         </Link>
                     )}
+                </div>
+            </div>
+
+            {/* SEO Content Section */}
+            <div className="container mx-auto px-4 mt-24 max-w-4xl border-t border-white/10 pt-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 className="text-2xl font-bold text-white mb-4 font-heading">About This Tool</h3>
+                        <p className="text-slate-400 leading-relaxed font-mono text-sm mb-6">
+                            This <strong>{title}</strong> is part of the extensive developer toolkit provided by <span className="text-primary">Hello World Classes</span>.
+                            Designed for students, beginners, and professional developers, our tools aim to simplify complex coding tasks.
+                            Whether you are debugging Python code, converting HTML to PDF, or just testing your typing speed, we have a free tool for you.
+                        </p>
+                        <p className="text-slate-400 leading-relaxed font-mono text-sm">
+                            Our mission is to make coding accessible. By combining interactive tools with our comprehensive
+                            <Link href="/" className="text-cyan-400 hover:underline mx-1">coding courses</Link>,
+                            we provide a holistic learning environment.
+                        </p>
+                    </div>
+                    <div>
+                        <h3 className="text-2xl font-bold text-white mb-4 font-heading">Why Hello World Classes?</h3>
+                        <ul className="space-y-3 text-sm font-mono text-slate-400">
+                            <li className="flex items-start gap-2">
+                                <span className="text-primary mt-1">✔</span>
+                                <span><strong>100% Free Tools:</strong> No hidden costs, premium subscriptions, or paywalls.</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                                <span className="text-primary mt-1">✔</span>
+                                <span><strong>Student Focused:</strong> Built to help you ace your exams and interviews.</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                                <span className="text-primary mt-1">✔</span>
+                                <span><strong>Indian Tech Community:</strong> Join thousands of learners mastering Python & Web Dev.</span>
+                            </li>
+                            <li className="flex items-start gap-2">
+                                <span className="text-primary mt-1">✔</span>
+                                <span><strong>Fast & Secure:</strong> All processing happens in your browser or secure cloud.</span>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 

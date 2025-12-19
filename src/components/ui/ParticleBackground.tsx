@@ -83,9 +83,14 @@ export function ParticleBackground() {
         }
 
         const init = () => {
-            // Performance: Limit particles (Max 60 for mobile/desktop balance)
-            const numberOfParticles = Math.min((width * height) / 15000, 60)
-            particles.length = 0 // Clear array instead of reassigning
+            // Performance: Limit particles based on screen width
+            // Mobile: Very few particles for high FPS. Desktop: More for effect.
+            const isMobile = width < 768
+            const density = isMobile ? 25000 : 15000
+            const maxParticles = isMobile ? 20 : 50 // Drastically reduced for mobile
+
+            const numberOfParticles = Math.min((width * height) / density, maxParticles)
+            particles.length = 0
             for (let i = 0; i < numberOfParticles; i++) {
                 particles.push(new Particle())
             }

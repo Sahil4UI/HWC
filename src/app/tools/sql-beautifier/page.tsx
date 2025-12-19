@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ToolLayout } from "@/components/tools/ToolLayout"
+import { ToolContent } from "@/components/tools/ToolContent"
 import { Button } from "@/components/ui/Button"
 import { Copy, Database, Play, Sparkles, Trash2, CheckCircle } from "lucide-react"
 import { format } from "sql-formatter"
@@ -141,6 +142,20 @@ export default function SqlBeautifier() {
                 </div>
 
             </div>
+
+            <ToolContent
+                toolName="SQL Beautifier"
+                howToUse={[
+                    { title: "Input SQL", desc: "Paste your unformatted, messy SQL query." },
+                    { title: "Select Dialect", desc: "Choose MySQL, PostgreSQL, or Standard SQL." },
+                    { title: "Beautify", desc: "Get a clean, indented, upper-case formatted query." }
+                ]}
+                whyUse={[
+                    "Readability: Understand complex joins and subqueries easily.",
+                    "Debugging: Spot missing commas or keywords faster.",
+                    "Standardization: Follow best practices for SQL styling."
+                ]}
+            />
         </ToolLayout>
     )
 }

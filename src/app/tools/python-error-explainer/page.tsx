@@ -1,5 +1,6 @@
 import { ErrorExplainer } from "@/components/tools/ErrorExplainer"
 import { ToolLayout } from "@/components/tools/ToolLayout"
+import { ToolContent } from "@/components/tools/ToolContent"
 
 export const metadata = {
     title: "Python Error Explainer | Hello World Classes",
@@ -14,6 +15,20 @@ export default function ErrorExplainerPage() {
             videoLink="https://youtube.com" // Placeholder
         >
             <ErrorExplainer />
+
+            <ToolContent
+                toolName="Python Error Explainer"
+                howToUse={[
+                    { title: "Paste Error", desc: "Copy the full traceback from your terminal." },
+                    { title: "Analyze", desc: "Click 'Explain Error' to get a human-readable diagnosis." },
+                    { title: "Fix", desc: "Follow the suggested solution code." }
+                ]}
+                whyUse={[
+                    "Beginner Friendly: Decodes 'KeyError', 'IndexError', and confusing messages.",
+                    "Hinglish Support: Explanation in simple English/Hinglish for Indian students.",
+                    "Fast Debugging: Don't spend hours searching StackOverflow."
+                ]}
+            />
         </ToolLayout>
     )
 }

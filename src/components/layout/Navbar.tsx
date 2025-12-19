@@ -97,8 +97,8 @@ export function Navbar() {
             {/* Mobile Nav */}
             <div
                 className={cn(
-                    "md:hidden fixed inset-x-0 top-16 bg-black/95 backdrop-blur-xl border-b border-white/10 transition-all duration-300 ease-in-out overflow-hidden shadow-2xl",
-                    isOpen ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
+                    "md:hidden fixed inset-x-0 top-16 bg-black/95 backdrop-blur-xl border-b border-white/10 transition-all duration-300 ease-in-out shadow-2xl overflow-y-auto",
+                    isOpen ? "h-[calc(100vh-4rem)] opacity-100" : "h-0 opacity-0"
                 )}
             >
                 <div className="flex flex-col p-4 gap-4">

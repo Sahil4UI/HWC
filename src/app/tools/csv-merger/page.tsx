@@ -4,6 +4,7 @@ import { useState, useCallback } from "react"
 import { useDropzone } from "react-dropzone"
 import Papa from "papaparse"
 import { ToolLayout } from "@/components/tools/ToolLayout"
+import { ToolContent } from "@/components/tools/ToolContent"
 import { Button } from "@/components/ui/Button"
 import { FileSpreadsheet, Upload, X, ArrowDown, Download, CheckCircle, Table, Trash2, PieChart, BarChart as BarChartIcon, Eye } from "lucide-react"
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts'
@@ -184,8 +185,8 @@ export default function CsvToolkit() {
                                 onClick={() => setActiveTab(tab.id as Tab)}
                                 disabled={files.length === 0}
                                 className={`flex items-center gap-2 px-6 py-4 text-sm font-bold border-b-2 transition-colors whitespace-nowrap ${activeTab === tab.id
-                                        ? 'border-indigo-500 text-indigo-400 bg-indigo-500/5'
-                                        : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-white/5'
+                                    ? 'border-indigo-500 text-indigo-400 bg-indigo-500/5'
+                                    : 'border-transparent text-slate-500 hover:text-slate-300 hover:bg-white/5'
                                     } ${files.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
                             >
                                 <tab.icon className="h-4 w-4" />
@@ -320,6 +321,24 @@ export default function CsvToolkit() {
                     </div>
                 </div>
             </div>
+
+            <ToolContent
+                toolName="CSV Super Toolkit"
+                howToUse={[
+                    { title: "Upload Files", desc: "Drag and drop multiple CSV or Excel files." },
+                    { title: "View & Clean", desc: "Preview data, remove duplicates, or fix formatting instantly." },
+                    { title: "Merge/Export", desc: "Combine all files into one master CSV and download." }
+                ]}
+                whyUse={[
+                    "Privacy First: All processing happens in your browser. No server upload.",
+                    "Big Data: Handles large files without crashing Excel.",
+                    "Time Saver: Merge monthly reports in seconds instead of hours."
+                ]}
+                faq={[
+                    { question: "Is my data safe?", answer: "Yes. We don't see your files. It's client-side JavaScript." },
+                    { question: "Can I merge columns?", answer: "Currently, we merge by appending rows (stacking)." }
+                ]}
+            />
         </ToolLayout>
     )
 }

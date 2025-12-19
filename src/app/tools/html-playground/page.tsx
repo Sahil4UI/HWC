@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { ToolLayout } from "@/components/tools/ToolLayout"
+import { ToolContent } from "@/components/tools/ToolContent"
 import { Button } from "@/components/ui/Button"
 import { Code2, Play, Download, LayoutTemplate } from "lucide-react"
 
@@ -65,7 +66,6 @@ ${js}
             subtitle="Write code and see results instantly. A lightweight frontend editor for rapid prototyping."
         >
             <div className="h-[80vh] flex flex-col md:flex-row gap-4">
-
                 {/* Editor Column */}
                 <div className="flex-1 flex flex-col gap-4 h-full">
                     {/* HTML */}
@@ -135,6 +135,20 @@ ${js}
                 </div>
 
             </div>
+
+            <ToolContent
+                toolName="Web Playground"
+                howToUse={[
+                    { title: "Write Code", desc: "Use the three panels for HTML, CSS, and JS. Results update automatically." },
+                    { title: "Export", desc: "Download your creation as a single .html file to share or host." },
+                    { title: "Experiment", desc: "Great for testing library imports or CSS tricks safely." }
+                ]}
+                whyUse={[
+                    "Rapid Prototyping: Test ideas without setting up a local server.",
+                    "Isolation: Sandboxed execution prevents crashes.",
+                    "Learning: Visually see how HTML/CSS interact instantly."
+                ]}
+            />
         </ToolLayout>
     )
 }

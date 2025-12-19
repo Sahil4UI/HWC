@@ -25,7 +25,7 @@ export function TypingTest() {
     const [isFinished, setIsFinished] = useState(false)
 
     // Live Stats
-    const [charIndex, setCharIndex] = useState(0)
+    const [typedChars, setTypedChars] = useState("")
     const [mistakes, setMistakes] = useState(0)
     const [wpm, setWpm] = useState(0)
     const [accuracy, setAccuracy] = useState(100)
@@ -68,7 +68,7 @@ export function TypingTest() {
     const reset = () => {
         setIsActive(false)
         setIsFinished(false)
-        setCharIndex(0)
+        setTypedChars("") // Clear typed history
         setMistakes(0)
         setWpm(0)
         setAccuracy(100)
@@ -82,27 +82,59 @@ export function TypingTest() {
         if (!isActive) setIsActive(true)
 
         const { value } = e.target
-        const char = value.slice(-1)
+        // We need to handle backspace properly by taking the value directly if controlled, 
+        // OR essentially since we used a hidden input that clears, we can't easily sync state.
+        // Actually, simpler approach: The input value IS the history?
+        // Let's rely on the input event type for backspace support if we want or just append.
+        // BUT the previous implementation used `absolute opacity-0` input which triggers onChange. 
+        // To support backspace, we should just let the hidden input hold the value?
 
-        if ((e.nativeEvent as any).inputType === 'deleteContentBackward') {
-            if (charIndex > 0) setCharIndex(p => p - 1)
+        // Wait, the previous implementation was: 
+        // <input ... value="" onChange=... /> (it didn't have value prop set to state properly in the viewed code?? No, it was uncontrolled or always reset?)
+        // The viewed code had: <input ... onChange={handleTestInput} /> with NO value prop.
+        // This means `e.target.value` contains ONLY the newly typed char (or full string if not cleared).
+
+        // Let's use LAST char from the event if we assume the input is cumulative?
+        // Actually safer: Append char to state.
+
+        const inputType = (e.nativeEvent as any).inputType
+
+        if (inputType === 'deleteContentBackward') {
+            setTypedChars(prev => prev.slice(0, -1))
             return
         }
 
-        if (text[charIndex] !== char) setMistakes(p => p + 1)
-        setCharIndex(p => p + 1)
+        const char = value.slice(-1) // Get last char typed
+        const nextIndex = typedChars.length
 
-        if (charIndex >= text.length - 1) endGame()
+        if (nextIndex >= text.length) {
+            endGame()
+            return
+        }
 
-        const total = charIndex + 1
-        const acc = Math.floor(((total - mistakes) / total) * 100)
+        // Update Stats
+        if (char !== text[nextIndex]) {
+            setMistakes(p => p + 1)
+        }
+
+        setTypedChars(prev => prev + char)
+
+        // Real-time WPM Calc
+        const total = nextIndex + 1
+        const currentMistakes = (char !== text[nextIndex]) ? mistakes + 1 : mistakes
+        const acc = Math.floor(((total - currentMistakes) / total) * 100)
         setAccuracy(acc > 0 ? acc : 100)
 
         const elapsed = timeLimit - timeLeft
         if (elapsed > 0) {
-            const w = Math.round(((total - mistakes) / 5) / (elapsed / 60))
+            // Standard WPM formula: (Characters / 5) / TimeInMinutes
+            const w = Math.round((total / 5) / (elapsed / 60))
             setWpm(w > 0 ? w : 0)
         }
+
+        // Reset input value manually to avoid growing string? 
+        // Actually best to keep input controlled value = typedChars to allow native backspace handling?
+        // Let's DO that.
     }
 
     return (
@@ -116,8 +148,21 @@ export function TypingTest() {
                 <input
                     ref={testInputRef}
                     type="text"
-                    className="absolute opacity-0 pointer-events-none"
-                    onChange={handleTestInput}
+                    className="absolute opacity-0 -z-10" // Moved behind
+                    value={typedChars} // Controlled Input
+                    onChange={(e) => {
+                        if (!isActive && !isFinished) setIsActive(true)
+                        setTypedChars(e.target.value)
+
+                        // Recalculate mistakes from scratch based on full string to be accurate on backspace
+                        let errs = 0
+                        for (let i = 0; i < e.target.value.length; i++) {
+                            if (e.target.value[i] !== text[i]) errs++
+                        }
+                        setMistakes(errs)
+
+                        if (e.target.value.length >= text.length) endGame()
+                    }}
                     autoFocus
                 />
 
@@ -154,9 +199,20 @@ export function TypingTest() {
 
                 {/* Text Area */}
                 <div className={`text-2xl font-mono leading-relaxed transition-opacity ${isActive ? 'opacity-100' : 'opacity-60'}`}>
-                    {text.split('').map((char, i) => (
-                        <span key={i} className={`${i < charIndex ? 'text-white' : 'text-slate-600'} ${i === charIndex ? 'border-b-2 border-primary text-white animate-pulse' : ''}`}>{char}</span>
-                    ))}
+                    {text.split('').map((char, i) => {
+                        const isTyped = i < typedChars.length
+                        const isCorrect = isTyped && typedChars[i] === char
+                        const isCurrent = i === typedChars.length
+
+                        return (
+                            <span key={i} className={`
+                                ${!isTyped ? 'text-slate-600' : isCorrect ? 'text-white' : 'text-red-500 bg-red-500/10'} 
+                                ${isCurrent ? 'border-b-2 border-primary text-primary animate-pulse' : ''}
+                            `}>
+                                {char}
+                            </span>
+                        )
+                    })}
                 </div>
             </div>
         </div>

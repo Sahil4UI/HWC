@@ -1,5 +1,6 @@
 import { OneLinerConverter } from "@/components/tools/OneLinerConverter"
 import { ToolLayout } from "@/components/tools/ToolLayout"
+import { ToolContent } from "@/components/tools/ToolContent"
 
 export const metadata = {
     title: "Python One-Liner Converter | Hello World Classes",
@@ -14,6 +15,20 @@ export default function OneLinerPage() {
             videoLink="https://youtube.com"
         >
             <OneLinerConverter />
+
+            <ToolContent
+                toolName="Python One-Liner"
+                howToUse={[
+                    { title: "Input Loop", desc: "Paste your standard 3-4 line 'for loop'." },
+                    { title: "Convert", desc: "Get the List Comprehension equivalent instantly." },
+                    { title: "Compare", desc: "Learn how the syntax maps from one to the other." }
+                ]}
+                whyUse={[
+                    "Pythonic Code: Write cleaner, more professional Python.",
+                    "Efficiency: List comprehensions are often faster than loops.",
+                    "Show-off: Impress your team with elegant one-liners."
+                ]}
+            />
         </ToolLayout>
     )
 }
