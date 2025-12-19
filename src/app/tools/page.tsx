@@ -7,7 +7,7 @@ import { ParticleBackground } from "@/components/ui/ParticleBackground"
 import Link from "next/link"
 
 // Define Categories
-type Category = "All" | "AI Power" | "Dev Tools" | "Students" | "Utilities"
+type Category = "All" | "AI Power" | "Dev Tools" | "Students" | "Utilities" | "Typing Games"
 
 const tools = [
     // AI Power
@@ -50,10 +50,18 @@ const tools = [
     {
         icon: <Keyboard className="h-8 w-8 text-black" />,
         title: "Typing Speed Test",
-        desc: "Test your WPM in a cyberpunk environment. Minimalist Monkeytype clone.",
+        desc: "Professional WPM test. Plain and simple. Focus on accuracy and speed.",
         href: "/tools/typing-test",
         gradient: "from-yellow-400 to-orange-500",
-        category: "Dev Tools"
+        category: "Typing Games"
+    },
+    {
+        icon: <Gamepad2 className="h-8 w-8 text-black" />,
+        title: "Typing Arcade",
+        desc: "5+ Games: Cyber Defense, Neon Rush, Bit Boss. Fun way to type fast.",
+        href: "/tools/typing-arcade",
+        gradient: "from-purple-500 to-cyan-500",
+        category: "Typing Games"
     },
     {
         icon: <Terminal className="h-8 w-8 text-black" />,
@@ -144,7 +152,7 @@ export default function ToolsPage() {
         return matchesSearch && matchesCategory
     })
 
-    const categories: Category[] = ["All", "AI Power", "Dev Tools", "Students", "Utilities"]
+    const categories: Category[] = ["All", "AI Power", "Dev Tools", "Students", "Utilities", "Typing Games"]
 
     return (
         <div className="min-h-screen bg-background font-sans selection:bg-primary/20 text-foreground relative">
