@@ -1,54 +1,56 @@
 "use client"
 
 import { useState, useEffect, useRef } from 'react'
-import { RotateCcw, Crown, Timer, BookOpen, Gamepad2, Keyboard, Zap, Shield, Heart } from 'lucide-react'
-import { TYPING_LESSONS, Lesson } from '@/data/typingLessons'
-import Image from 'next/image'
+import { RotateCcw, Crown, Timer, Gamepad2, Zap, Shield, Heart, Skull, Target, Flame } from 'lucide-react'
 
 const SAMPLE_TEXT = "the quick brown fox jumps over the lazy dog while programming in python is fun and rewarding keep coding every day to improve your skills and logic never give up on your dreams be consistent and patient with yourself debugging is part of the process learning to type fast is a superpower for developers focus on accuracy first then speed will come naturally"
 
-type TimeMode = 15 | 30 | 60 | 120 | 300
-type TestMode = "TEST" | "LESSON" | "GAME"
+type TimeMode = 15 | 30 | 60 | 120
+type TestMode = "TEST" | "ARCADE"
+type GameType = "CYBER_DEFENSE" | "NEON_RUSH" | null
 
 const TIME_OPTIONS = [
     { label: '15s', value: 15 },
     { label: '30s', value: 30 },
     { label: '60s', value: 60 },
     { label: '2m', value: 120 },
-    { label: '5m', value: 300 },
 ]
 
 export function TypingTest() {
     // Mode State
     const [mode, setMode] = useState<TestMode>("TEST")
+    const [selectedGame, setSelectedGame] = useState<GameType>(null)
 
     // Test Config
     const [timeLimit, setTimeLimit] = useState<TimeMode>(30)
 
     // Activity State
     const [text, setText] = useState(SAMPLE_TEXT)
-    const [activeLesson, setActiveLesson] = useState<Lesson | null>(null)
     const [timeLeft, setTimeLeft] = useState(30)
     const [isActive, setIsActive] = useState(false)
     const [isFinished, setIsFinished] = useState(false)
 
-    // Live Stats
+    // Live Stats (Test Mode)
     const [charIndex, setCharIndex] = useState(0)
     const [mistakes, setMistakes] = useState(0)
     const [wpm, setWpm] = useState(0)
     const [accuracy, setAccuracy] = useState(100)
 
-    // Game Specific State - CYBER DEFENSE
-    const [fallingWords, setFallingWords] = useState<{ id: number, text: string, top: number, left: number, isDestroyed: boolean }[]>([])
+    // Arcade State
     const [gameScore, setGameScore] = useState(0)
-    const [gameLives, setGameLives] = useState(5)
+    const [gameLives, setGameLives] = useState(3)
     const [gameLevel, setGameLevel] = useState(1)
     const [gameInput, setGameInput] = useState("")
+
+    // Entities for games
+    const [entities, setEntities] = useState<{ id: number, text: string, x: number, y: number, life: number, maxLife: number }[]>([])
+
+    // Visual FX State
+    const [shake, setShake] = useState(false)
 
     // Refs
     const testInputRef = useRef<HTMLInputElement>(null)
     const gameInputRef = useRef<HTMLInputElement>(null)
-    const charRefs = useRef<(HTMLSpanElement | null)[]>([])
     const intervalRef = useRef<NodeJS.Timeout | null>(null)
     const gameLoopRef = useRef<NodeJS.Timeout | null>(null)
 
@@ -59,113 +61,110 @@ export function TypingTest() {
         return `${mins}:${secs.toString().padStart(2, '0')}`
     }
 
-    // INIT Focus
+    // --- EFFECT: Focus Management ---
     useEffect(() => {
-        if (mode === 'GAME') {
+        if (mode === 'ARCADE' && selectedGame) {
             gameInputRef.current?.focus()
-        } else {
+        } else if (mode === 'TEST') {
             testInputRef.current?.focus()
         }
-    }, [mode])
+    }, [mode, selectedGame])
 
-    // Timer Update
+    // --- EFFECT: Timer (Test Mode) ---
     useEffect(() => {
-        if (!isActive && mode !== 'GAME') {
-            setTimeLeft(timeLimit)
-        }
+        if (!isActive && mode === 'TEST') setTimeLeft(timeLimit)
     }, [timeLimit, isActive, mode])
 
-    // Main Timer Loop (Test/Lesson)
     useEffect(() => {
-        if (isActive && timeLeft > 0 && mode !== 'GAME') {
+        if (isActive && timeLeft > 0 && mode === 'TEST') {
             intervalRef.current = setInterval(() => {
                 setTimeLeft((prev) => {
-                    const newValue = prev - 1
-                    if (newValue <= 0) {
-                        endGame()
-                        return 0
-                    }
-                    return newValue
+                    if (prev <= 1) { endGame(); return 0; }
+                    return prev - 1
                 })
             }, 1000)
         }
-        return () => {
-            if (intervalRef.current) clearInterval(intervalRef.current)
-        }
+        return () => { if (intervalRef.current) clearInterval(intervalRef.current) }
     }, [isActive, mode])
 
-    // GAME LOOP
+    // --- EFFECT: Game Loop ---
     useEffect(() => {
-        if (mode === 'GAME' && isActive) {
+        if (mode === 'ARCADE' && selectedGame && isActive && !isFinished) {
             gameLoopRef.current = setInterval(() => {
-                setFallingWords(prev => {
-                    const speed = 0.5 + (gameLevel * 0.1) // Increase speed with level
+                setEntities(prev => {
+                    let next = [...prev]
+                    const now = Date.now()
 
-                    // Move words
-                    const moved = prev.map(w => ({ ...w, top: w.top + speed }))
-
-                    // Check collisions (bottom of screen)
-                    const survived: typeof prev = []
-                    let damageTaken = 0
-
-                    moved.forEach(w => {
-                        if (w.top > 90 && !w.isDestroyed) {
-                            damageTaken++
-                            // Word hit base logic
-                        } else if (w.top <= 90 || w.isDestroyed) {
-                            if (!w.isDestroyed) survived.push(w)
-                            // If destroyed, we remove it from next frame (animation handled by separate state? simplify: just remove for now or keep for anim)
-                            // Ideally keep for anim, but for simplicity remove
+                    // NEON RUSH LOGIC: Shrink life
+                    if (selectedGame === 'NEON_RUSH') {
+                        next = next.map(e => ({ ...e, life: e.life - 1 }))
+                        // Damage logic
+                        const died = next.filter(e => e.life <= 0)
+                        if (died.length > 0) {
+                            setGameLives(l => {
+                                const newVal = l - died.length
+                                if (newVal <= 0) endGame()
+                                return newVal
+                            })
+                            // Trigger Shake
+                            setShake(true)
+                            setTimeout(() => setShake(false), 200)
                         }
-                    })
+                        next = next.filter(e => e.life > 0)
+                    }
 
-                    if (damageTaken > 0) {
-                        setGameLives(l => {
-                            const newLives = l - damageTaken
-                            if (newLives <= 0) endGame()
-                            return newLives
+                    // CYBER DEFENSE LOGIC: Move Down
+                    if (selectedGame === 'CYBER_DEFENSE') {
+                        const speed = 0.5 + (gameLevel * 0.1)
+                        next = next.map(e => ({ ...e, y: e.y + speed }))
+
+                        const breached = next.filter(e => e.y > 90)
+                        if (breached.length > 0) {
+                            setGameLives(l => {
+                                const newVal = l - breached.length
+                                if (newVal <= 0) endGame()
+                                return newVal
+                            })
+                            setShake(true)
+                            setTimeout(() => setShake(false), 200)
+                        }
+                        next = next.filter(e => e.y <= 90)
+                    }
+
+                    // SPAWN LOGIC
+                    const maxEntities = selectedGame === 'NEON_RUSH' ? 3 + gameLevel : 5 + gameLevel
+                    const spawnRate = selectedGame === 'NEON_RUSH' ? 0.03 + (gameLevel * 0.01) : 0.02 + (gameLevel * 0.005)
+
+                    if (Math.random() < spawnRate && next.length < maxEntities) {
+                        const words = ["run", "hit", "bug", "zap", "zip", "exe", "bin", "hex", "ram", "cpu", "gpu", "net", "web", "bot", "git", "bash", "sudo", "echo", "void", "null", "true", "false", "init", "load", "kill", "exit"]
+                        const word = words[Math.floor(Math.random() * words.length)]
+
+                        // Position logic
+                        let x = Math.random() * 80 + 5
+                        let y = 0 // Top for Cyber Defense
+
+                        if (selectedGame === 'NEON_RUSH') {
+                            y = Math.random() * 60 + 10 // Random Y for Neon Rush
+                        }
+
+                        next.push({
+                            id: now + Math.random(),
+                            text: word,
+                            x,
+                            y,
+                            life: 100, // 100% life for Neon Rush
+                            maxLife: 100
                         })
                     }
 
-                    // Spawn logic
-                    if (Math.random() < (0.02 + (gameLevel * 0.005)) && survived.length < (5 + gameLevel)) {
-                        const words = ["system", "data", "cyber", "node", "react", "pixel", "grid", "neon", "flux", "core", "bit", "byte", "scan", "hack", "code", "void", "null", "root", "user", "host", "link", "sync", "ping", "load", "save", "edit", "file", "view", "copy", "cut", "paste", "exit"]
-                        const newWord = {
-                            id: Date.now() + Math.random(),
-                            text: words[Math.floor(Math.random() * words.length)],
-                            top: 0,
-                            left: Math.random() * 80 + 5,
-                            isDestroyed: false
-                        }
-                        return [...survived, newWord]
-                    }
-                    return survived
+                    return next
                 })
             }, 50)
         }
-        return () => {
-            if (gameLoopRef.current) clearInterval(gameLoopRef.current)
-        }
-    }, [isActive, mode, gameLevel])
+        return () => { if (gameLoopRef.current) clearInterval(gameLoopRef.current) }
+    }, [isActive, mode, selectedGame, gameLevel])
 
-    // WPM Snapshot (Test Only)
-    useEffect(() => {
-        if (isActive && timeLeft > 0 && mode !== 'GAME') {
-            const timeElapsed = timeLimit - timeLeft
-            if (timeElapsed > 0) {
-                const currentWpm = Math.round(((charIndex - mistakes) / 5) / (timeElapsed / 60))
-                setWpm(currentWpm > 0 ? currentWpm : 0)
-            }
-        }
-    }, [timeLeft])
-
-    const startLesson = (lesson: Lesson) => {
-        setActiveLesson(lesson)
-        setText(lesson.content)
-        setMode("LESSON")
-        resetGame("LESSON")
-    }
-
+    // --- HANDLERS ---
     const endGame = () => {
         setIsActive(false)
         setIsFinished(true)
@@ -173,48 +172,45 @@ export function TypingTest() {
         if (gameLoopRef.current) clearInterval(gameLoopRef.current)
     }
 
-    const resetGame = (targetMode: TestMode = mode) => {
+    const reset = () => {
+        // Common
+        setIsActive(false)
+        setIsFinished(false)
+        setGameScore(0)
+        setGameLives(3)
+        setGameLevel(1)
+        setGameInput("")
+        setEntities([])
+
+        // Test Specific
         setCharIndex(0)
         setMistakes(0)
         setWpm(0)
         setAccuracy(100)
         setTimeLeft(timeLimit)
-        setIsActive(false)
-        setIsFinished(false)
 
-        // Game Reset
-        setGameScore(0)
-        setGameLives(5)
-        setGameLevel(1)
-        setFallingWords([])
-        setGameInput("")
-
-        if (targetMode === "TEST") setText(SAMPLE_TEXT)
-        // Lesson text persists
-
-        setTimeout(() => {
-            if (targetMode === 'GAME') gameInputRef.current?.focus()
-            else testInputRef.current?.focus()
-        }, 10)
+        if (mode === 'TEST') {
+            setText(SAMPLE_TEXT)
+            setTimeout(() => testInputRef.current?.focus(), 10)
+        } else if (mode === 'ARCADE' && selectedGame) {
+            setIsActive(true) // Auto-start arcade game on select/retry
+            setTimeout(() => gameInputRef.current?.focus(), 10)
+        }
     }
 
-    const handleGameInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (isFinished) return
+    const handleArcadeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
         const val = e.target.value
         setGameInput(val)
 
-        const matchIndex = fallingWords.findIndex(w => w.text === val.trim() && !w.isDestroyed)
-        if (matchIndex !== -1) {
-            // MATCH FOUND
-            // Visual flair: Trigger explosion at word location (simplified here: just remove)
-            setFallingWords(prev => prev.filter((_, i) => i !== matchIndex))
-            setGameScore(prev => prev + (10 * gameLevel))
-            setGameInput("") // Clear
+        const matchIdx = entities.findIndex(e => e.text === val.trim())
+        if (matchIdx !== -1) {
+            // HIT!
+            setEntities(prev => prev.filter((_, i) => i !== matchIdx))
+            setGameScore(s => s + (10 * gameLevel))
+            setGameInput("")
 
-            // Level up check
-            if (gameScore > 0 && gameScore % 100 === 0) {
-                setGameLevel(l => l + 1)
-            }
+            // Level Up Check
+            if ((gameScore + 10) % 100 === 0) setGameLevel(l => l + 1)
         }
     }
 
@@ -225,59 +221,188 @@ export function TypingTest() {
         const { value } = e.target
         const char = value.slice(-1)
 
-        // Native backspace check
         if ((e.nativeEvent as any).inputType === 'deleteContentBackward') {
-            if (charIndex > 0) setCharIndex(prev => prev - 1)
+            if (charIndex > 0) setCharIndex(p => p - 1)
             return
         }
 
-        const currentChar = text[charIndex]
-        if (char !== currentChar) {
-            setMistakes(prev => prev + 1)
-        }
-        setCharIndex(prev => prev + 1)
+        if (text[charIndex] !== char) setMistakes(p => p + 1)
+        setCharIndex(p => p + 1)
 
-        if (charIndex >= text.length - 1) {
-            endGame()
-        }
+        if (charIndex >= text.length - 1) endGame()
 
-        const totalTyped = charIndex + 1
-        const acc = Math.floor(((totalTyped - mistakes) / totalTyped) * 100)
+        // Real-time WPM/Acc update only occasionally for perf? keeping detailed here for responsiveness
+        const total = charIndex + 1
+        const acc = Math.floor(((total - mistakes) / total) * 100)
         setAccuracy(acc > 0 ? acc : 100)
+
+        const elapsed = timeLimit - timeLeft
+        if (elapsed > 0) {
+            const w = Math.round(((total - mistakes) / 5) / (elapsed / 60))
+            setWpm(w > 0 ? w : 0)
+        }
     }
 
     return (
-        <div className="max-w-6xl mx-auto flex flex-col min-h-[600px]">
+        <div className={`max-w-6xl mx-auto flex flex-col min-h-[600px] ${shake ? 'animate-shake' : ''}`}>
+            <style jsx>{`
+                @keyframes shake {
+                    0% { transform: translate(1px, 1px) rotate(0deg); }
+                    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+                    20% { transform: translate(-3px, 0px) rotate(1deg); }
+                    30% { transform: translate(3px, 2px) rotate(0deg); }
+                    40% { transform: translate(1px, -1px) rotate(1deg); }
+                    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+                    60% { transform: translate(-3px, 1px) rotate(0deg); }
+                    70% { transform: translate(3px, 1px) rotate(-1deg); }
+                    80% { transform: translate(-1px, -1px) rotate(1deg); }
+                    90% { transform: translate(1px, 2px) rotate(0deg); }
+                    100% { transform: translate(1px, -2px) rotate(-1deg); }
+                }
+                .animate-shake { animation: shake 0.5s; }
+            `}</style>
 
-            {/* Mode Tabs */}
-            <div className="flex justify-center flex-wrap gap-4 mb-8 border-b border-white/5 pb-6">
-                <button onClick={() => { setMode("TEST"); resetGame("TEST"); }}
-                    className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all ${mode === 'TEST' ? 'bg-white text-black shadow-lg shadow-white/20' : 'text-slate-500 hover:text-white'}`}>
-                    <Timer className="w-4 h-4" /> Speed Test
+            {/* Top Navigation */}
+            <div className="flex justify-center gap-6 mb-8 border-b border-white/5 pb-6">
+                <button
+                    onClick={() => { setMode("TEST"); setSelectedGame(null); reset(); }}
+                    className={`nav-btn ${mode === 'TEST' ? 'active-test' : ''}`}
+                >
+                    <Timer className="w-5 h-5" /> Speed Test
                 </button>
-                <button onClick={() => { setMode("LESSON"); resetGame("LESSON"); }}
-                    className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all ${mode === 'LESSON' ? 'bg-[#00F3FF] text-black shadow-lg shadow-[#00F3FF]/20' : 'text-slate-500 hover:text-[#00F3FF]'}`}>
-                    <BookOpen className="w-4 h-4" /> Lessons
-                </button>
-                <button onClick={() => { setMode("GAME"); resetGame("GAME"); setIsActive(true); }}
-                    className={`flex items-center gap-2 px-6 py-2 rounded-full font-bold transition-all ${mode === 'GAME' ? 'bg-purple-600 text-white shadow-lg shadow-purple-600/30' : 'text-slate-500 hover:text-purple-500'}`}>
-                    <Gamepad2 className="w-4 h-4" /> Cyber Defense
+                <button
+                    onClick={() => { setMode("ARCADE"); setSelectedGame(null); setIsActive(false); }}
+                    className={`nav-btn ${mode === 'ARCADE' ? 'active-arcade' : ''}`}
+                >
+                    <Gamepad2 className="w-5 h-5" /> Arcade Area
                 </button>
             </div>
 
-            <div className="flex-1 relative outline-none" onClick={() => mode === 'GAME' ? gameInputRef.current?.focus() : testInputRef.current?.focus()}>
+            {/* --- ARCADE AREA --- */}
+            {mode === 'ARCADE' && (
+                <div className="w-full">
+                    {!selectedGame ? (
+                        // Game Selection Menu
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto animate-in fade-in zoom-in">
+                            <button
+                                onClick={() => { setSelectedGame('CYBER_DEFENSE'); reset(); }}
+                                className="group relative overflow-hidden bg-black border border-purple-500/30 rounded-3xl p-8 hover:border-purple-500 hover:shadow-[0_0_50px_rgba(168,85,247,0.3)] transition-all text-left"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-b from-purple-900/10 to-transparent group-hover:opacity-100 opacity-50 transition-opacity"></div>
+                                <Shield className="w-16 h-16 text-purple-500 mb-6 group-hover:scale-110 transition-transform" />
+                                <h3 className="text-3xl font-black text-white mb-2 italic">CYBER DEFENSE</h3>
+                                <p className="text-purple-300 font-mono mb-6">Stop viruses from breaching the firewall. Classic falling words defense.</p>
+                                <div className="flex gap-2">
+                                    <span className="badge-purple">Classic</span>
+                                    <span className="badge-purple">Survival</span>
+                                </div>
+                            </button>
 
-                {/* CONDITIONAL INPUTS TO FIX CONTROLLED/UNCONTROLLED ERROR */}
-                {mode === 'GAME' ? (
-                    <input
-                        ref={gameInputRef}
-                        type="text"
-                        className="absolute opacity-0 pointer-events-none"
-                        value={gameInput}
-                        onChange={handleGameInput}
-                        autoFocus
-                    />
-                ) : (
+                            <button
+                                onClick={() => { setSelectedGame('NEON_RUSH'); reset(); }}
+                                className="group relative overflow-hidden bg-black border border-cyan-500/30 rounded-3xl p-8 hover:border-cyan-500 hover:shadow-[0_0_50px_rgba(6,182,212,0.3)] transition-all text-left"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-b from-cyan-900/10 to-transparent group-hover:opacity-100 opacity-50 transition-opacity"></div>
+                                <Zap className="w-16 h-16 text-cyan-400 mb-6 group-hover:scale-110 transition-transform" />
+                                <h3 className="text-3xl font-black text-white mb-2 italic">NEON RUSH</h3>
+                                <p className="text-cyan-300 font-mono mb-6">Reflex test. Targets appear randomly and decay fast. Destroy them before they vanish!</p>
+                                <div className="flex gap-2">
+                                    <span className="badge-cyan">Fast Paced</span>
+                                    <span className="badge-cyan">Reflexes</span>
+                                </div>
+                            </button>
+                        </div>
+                    ) : (
+                        // Active Game Canvas
+                        <div className="relative h-[600px] w-full bg-[#050505] rounded-3xl border-2 border-white/10 overflow-hidden shadow-2xl">
+                            <input
+                                ref={gameInputRef}
+                                type="text"
+                                className="absolute opacity-0 pointer-events-none"
+                                value={gameInput}
+                                onChange={handleArcadeInput}
+                                autoFocus
+                            />
+
+                            {/* HUD */}
+                            <div className="absolute top-0 left-0 w-full p-6 flex justify-between z-20 pointer-events-none">
+                                <div>
+                                    <div className="text-xs font-bold uppercase tracking-widest text-slate-500">Score</div>
+                                    <div className="text-4xl font-black text-white drop-shadow-md">{gameScore}</div>
+                                </div>
+                                <div className="flex gap-2">
+                                    {[...Array(3)].map((_, i) => (
+                                        <Heart key={i} className={`w-8 h-8 ${i < gameLives ? 'text-red-500 fill-red-500 animate-pulse' : 'text-slate-800'}`} />
+                                    ))}
+                                </div>
+                            </div>
+
+                            {/* Game Over Overlay */}
+                            {isFinished && (
+                                <div className="absolute inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center animate-in fade-in">
+                                    <div className="text-center">
+                                        <Skull className="w-24 h-24 text-red-500 mx-auto mb-4 animate-bounce" />
+                                        <h2 className="text-6xl font-black text-white mb-2 glitch-text">GAME OVER</h2>
+                                        <div className="text-2xl font-mono text-slate-400 mb-8">Score: <span className="text-white">{gameScore}</span></div>
+                                        <div className="flex gap-4 justify-center">
+                                            <button onClick={reset} className="btn-primary">
+                                                <RotateCcw className="w-5 h-5 mr-2" /> Play Again
+                                            </button>
+                                            <button onClick={() => { setSelectedGame(null); setIsActive(false); }} className="btn-secondary">
+                                                Exit to Menu
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            {/* ENTITIES RENDER */}
+                            {entities.map(e => (
+                                <div
+                                    key={e.id}
+                                    className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-75"
+                                    style={{
+                                        left: `${e.x}%`,
+                                        top: `${selectedGame === 'CYBER_DEFENSE' ? e.y : e.y}%` // Both use Y, but Neon Rush Y is static after spawn usually, but logic kept same structure
+                                    }}
+                                >
+                                    {selectedGame === 'NEON_RUSH' ? (
+                                        // Neon Rush Entity Style
+                                        <div
+                                            className="relative flex items-center justify-center"
+                                            style={{ opacity: e.life / 100, transform: `scale(${0.5 + (e.life / 200)})` }}
+                                        >
+                                            <div className="absolute inset-0 bg-cyan-500 blur-xl opacity-50"></div>
+                                            <div className="relative bg-black border-2 border-cyan-400 text-cyan-400 font-mono font-bold text-xl px-4 py-2 rounded-full shadow-[0_0_30px_rgba(34,211,238,0.5)]">
+                                                {e.text}
+                                            </div>
+                                            {/* Circular Progress (Life) - Simplified as border or scale */}
+                                        </div>
+                                    ) : (
+                                        // Cyber Defense Entity Style
+                                        <div className="font-mono font-bold text-lg text-white bg-black/80 border border-purple-500 px-3 py-1 rounded shadow-[0_0_15px_rgba(168,85,247,0.6)]">
+                                            <span className="text-purple-400 mr-2">☠</span>{e.text}
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
+
+                            {/* Player Input Display */}
+                            {!isFinished && (
+                                <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20">
+                                    <div className="bg-black/50 backdrop-blur border border-white/20 px-8 py-3 rounded-xl text-2xl font-mono font-bold text-white uppercase tracking-widest min-w-[200px] text-center shadow-2xl">
+                                        {gameInput || <span className="opacity-30">TYPE TO SHOOT</span>}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+                </div>
+            )}
+
+            {/* --- SPEED TEST AREA --- */}
+            {mode === 'TEST' && (
+                <div className="w-full relative" onClick={() => testInputRef.current?.focus()}>
                     <input
                         ref={testInputRef}
                         type="text"
@@ -285,202 +410,79 @@ export function TypingTest() {
                         onChange={handleTestInput}
                         autoFocus
                     />
-                )}
 
-                {/* GAME UI */}
-                {mode === 'GAME' && (
-                    <div className="h-[500px] border-2 border-purple-500/30 rounded-3xl bg-[#0a0a0f] relative overflow-hidden shadow-[0_0_50px_rgba(168,85,247,0.1)] group">
-
-                        {/* Background Grid */}
-                        <div className="absolute inset-0 bg-[linear-gradient(rgba(18,18,23,0.8)_2px,transparent_2px),linear-gradient(90deg,rgba(18,18,23,0.8)_2px,transparent_2px)] bg-[size:40px_40px] [transform:perspective(500px)_rotateX(20deg)] opacity-20 pointer-events-none"></div>
-                        <div className="absolute inset-0 bg-gradient-to-t from-purple-900/20 via-transparent to-transparent pointer-events-none"></div>
-
-                        {/* HUD */}
-                        <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-start z-10">
-                            <div className="flex flex-col gap-1">
-                                <div className="text-xs font-bold text-purple-400 uppercase tracking-widest">Score</div>
-                                <div className="text-4xl font-black text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">{gameScore}</div>
-                            </div>
-
-                            <div className="flex flex-col items-center">
-                                <span className="bg-purple-600/20 border border-purple-500/50 text-purple-200 text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider mb-2 backdrop-blur-md">
-                                    Wave {gameLevel}
-                                </span>
-                            </div>
-
-                            <div className="flex flex-col items-end gap-1">
-                                <div className="text-xs font-bold text-red-400 uppercase tracking-widest">System Integrity</div>
-                                <div className="flex gap-1">
-                                    {[...Array(5)].map((_, i) => (
-                                        <Heart key={i} className={`w-6 h-6 ${i < gameLives ? 'text-red-500 fill-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.8)]' : 'text-slate-800'}`} />
-                                    ))}
-                                </div>
-                            </div>
+                    {/* Test Header */}
+                    <div className="flex justify-between items-end mb-8 border-b border-white/5 pb-4">
+                        <div className="text-yellow-400 font-mono text-3xl font-bold flex items-center gap-2">
+                            <Timer className="w-8 h-8" /> {formatTime(timeLeft)}
                         </div>
-
-                        {/* Game Over Screen */}
-                        {isFinished && (
-                            <div className="absolute inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm animate-in fade-in duration-300">
-                                <div className="text-center p-10 border border-purple-500/50 bg-black/90 rounded-2xl shadow-[0_0_50px_rgba(168,85,247,0.3)]">
-                                    <h2 className="text-5xl font-black text-white mb-2 glitch-text">SYSTEM FAILURE</h2>
-                                    <p className="text-purple-400 font-mono mb-8">Defenses Breached</p>
-                                    <div className="mb-8">
-                                        <div className="text-6xl font-black text-white mb-2">{gameScore}</div>
-                                        <div className="text-xs uppercase tracking-widest text-slate-500">Final Score</div>
-                                    </div>
-                                    <button onClick={() => resetGame("GAME")} className="bg-purple-600 hover:bg-purple-500 text-white font-bold px-8 py-3 rounded-xl shadow-lg shadow-purple-600/25 transition-all flex items-center gap-2 mx-auto">
-                                        <RotateCcw className="w-5 h-5" /> Reboot System
-                                    </button>
-                                </div>
-                            </div>
-                        )}
-
-                        {/* Enemies */}
-                        {fallingWords.map(word => (
-                            <div
-                                key={word.id}
-                                className="absolute -translate-x-1/2"
-                                style={{ top: `${word.top}%`, left: `${word.left}%` }}
-                            >
-                                <div className="relative group">
-                                    <div className="absolute -inset-2 bg-purple-600/20 rounded-lg filter blur-lg opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                    <div className="font-mono font-black text-lg text-white bg-black/50 border border-purple-500/50 px-3 py-1 rounded-md shadow-[0_0_15px_rgba(168,85,247,0.4)] backdrop-blur-md flex items-center gap-2">
-                                        <span className="text-purple-400 animate-pulse">⚠</span>
-                                        {word.text}
-                                    </div>
-                                    {/* Connecting Line to base (optional cool effect) */}
-                                    <div className="absolute top-full left-1/2 w-[1px] h-[500px] bg-gradient-to-b from-purple-500/20 to-transparent -z-10"></div>
-                                </div>
-                            </div>
-                        ))}
-
-                        {/* Player / Input Visual */}
-                        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 w-96 max-w-[90%] z-20">
-                            <div className="relative group">
-                                <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-lg blur opacity-30 group-hover:opacity-100 transition duration-200"></div>
-                                <div className="relative flex items-center bg-black border border-white/10 rounded-lg px-4 py-3">
-                                    <Zap className="w-5 h-5 text-yellow-400 mr-3 animate-pulse" />
-                                    <input
-                                        value={gameInput}
-                                        readOnly
-                                        className="w-full bg-transparent text-white text-xl font-mono font-bold focus:outline-none placeholder-slate-700 uppercase tracking-wider"
-                                        placeholder="TARGET LOCKED..."
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                )}
-
-                {/* LESSON & TEST UI */}
-                {mode === 'LESSON' && !isActive && !activeLesson && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 animate-in fade-in zoom-in duration-300">
-                        {TYPING_LESSONS.map(lesson => (
-                            <button
-                                key={lesson.id}
-                                onClick={() => startLesson(lesson)}
-                                className="bg-[#1e1e24] border border-white/5 p-6 rounded-2xl text-left hover:border-[#00F3FF]/50 hover:bg-white/5 transition-all group relative overflow-hidden"
-                            >
-                                <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
-                                    <BookOpen className="w-24 h-24 text-white -rotate-12 translate-x-4 -translate-y-4" />
-                                </div>
-                                <div className="flex justify-between items-start mb-4 relative z-10">
-                                    <span className={`text-xs font-bold px-2 py-1 rounded bg-white/5 ${lesson.difficulty === 'Beginner' ? 'text-green-400' :
-                                            lesson.difficulty === 'Intermediate' ? 'text-yellow-400' : 'text-red-400'
-                                        }`}>
-                                        {lesson.difficulty}
-                                    </span>
-                                </div>
-                                <h3 className="text-xl font-bold text-white mb-2 relative z-10">{lesson.title}</h3>
-                                <p className="text-slate-400 text-sm font-mono truncate relative z-10">{lesson.content.substring(0, 30)}...</p>
-                            </button>
-                        ))}
-                    </div>
-                )}
-
-                {(mode === 'TEST' || (mode === 'LESSON' && activeLesson)) && !isFinished && (
-                    <div className="w-full">
-                        <div className="flex justify-between items-end mb-8 border-b border-white/5 pb-4">
-                            <div className="flex items-center gap-6">
-                                <div className="text-yellow-400 font-mono text-2xl font-bold flex items-center gap-2">
-                                    <Timer className="h-6 w-6" /> {formatTime(timeLeft)}
-                                </div>
-                                {mode === 'LESSON' && activeLesson && (
-                                    <div className="text-[#00F3FF] font-bold text-lg flex items-center gap-2">
-                                        <BookOpen className="h-5 w-5" /> {activeLesson.title}
-                                    </div>
-                                )}
-                            </div>
-
-                            {mode === 'TEST' && (
-                                <div className="flex gap-2">
-                                    {TIME_OPTIONS.map((opt) => (
-                                        <button
-                                            key={opt.value}
-                                            onClick={() => { setTimeLimit(opt.value as TimeMode); resetGame("TEST"); }}
-                                            className={`text-xs font-bold font-mono px-3 py-1 rounded transition-all ${timeLimit === opt.value ? 'bg-white text-black' : 'text-slate-500 hover:text-white'}`}
-                                        >
-                                            {opt.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className={`relative w-full font-mono text-2xl md:text-3xl leading-relaxed outline-none select-none transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-70'}`}>
-                            <div className="text-justify text-slate-600 break-words">
-                                {text.split('').map((char, index) => {
-                                    let colorClass = "text-slate-600"
-                                    if (index < charIndex) colorClass = "text-white"
-                                    const isCurrent = index === charIndex
-                                    return (
-                                        <span
-                                            key={index}
-                                            className={`transition-colors duration-75 ${isCurrent ? 'text-white border-b-2 border-[#00F3FF] bg-[#00F3FF]/10' : colorClass} ${index < charIndex ? 'text-green-400' : ''}`}
-                                        >
-                                            {char}
-                                        </span>
-                                    )
-                                })}
-                            </div>
-                        </div>
-                    </div>
-                )}
-
-                {isFinished && mode !== 'GAME' && (
-                    <div className="text-center py-20 animate-in fade-in zoom-in duration-500">
-                        <Crown className="h-20 w-20 text-yellow-500 mx-auto mb-6" />
-                        <h2 className="text-5xl font-black text-white mb-8">{mode === 'LESSON' ? 'Lesson Complete' : 'Test Result'}</h2>
-
-                        <div className="grid grid-cols-3 gap-8 max-w-3xl mx-auto mb-12">
-                            <div className="bg-[#1e1e24] p-8 rounded-2xl border border-white/10">
-                                <div className="text-4xl font-black text-white mb-2">{wpm}</div>
-                                <div className="text-xs uppercase tracking-widest text-slate-500">WPM</div>
-                            </div>
-                            <div className="bg-[#1e1e24] p-8 rounded-2xl border border-white/10">
-                                <div className="text-4xl font-black text-green-400 mb-2">{accuracy}%</div>
-                                <div className="text-xs uppercase tracking-widest text-slate-500">Accuracy</div>
-                            </div>
-                            <div className="bg-[#1e1e24] p-8 rounded-2xl border border-white/10">
-                                <div className="text-4xl font-black text-red-400 mb-2">{mistakes}</div>
-                                <div className="text-xs uppercase tracking-widest text-slate-500">Mistakes</div>
-                            </div>
-                        </div>
-
-                        <div className="flex justify-center gap-4">
-                            <button onClick={() => resetGame(mode)} className="bg-white text-black font-bold px-8 py-3 rounded-xl hover:scale-105 transition-transform flex items-center gap-2">
-                                <RotateCcw className="w-5 h-5" /> Retry
-                            </button>
-                            {mode === 'LESSON' && (
-                                <button onClick={() => { setMode("LESSON"); setActiveLesson(null); resetGame("LESSON"); }} className="bg-[#1e1e24] text-white border border-white/20 font-bold px-8 py-3 rounded-xl hover:bg-white/10 transition-colors">
-                                    Back to Lessons
+                        <div className="flex gap-2">
+                            {TIME_OPTIONS.map((opt) => (
+                                <button
+                                    key={opt.value}
+                                    onClick={() => { setTimeLimit(opt.value as TimeMode); reset(); }}
+                                    className={`px-3 py-1 rounded font-mono font-bold text-xs transition-colors ${timeLimit === opt.value ? 'bg-white text-black' : 'text-slate-500 hover:text-white'}`}
+                                >
+                                    {opt.label}
                                 </button>
-                            )}
+                            ))}
                         </div>
                     </div>
-                )}
-            </div>
+
+                    {/* Test Results Overlay */}
+                    {isFinished && (
+                        <div className="absolute inset-0 z-10 bg-[#0a0a0f]/95 flex flex-col items-center justify-center animate-in fade-in zoom-in">
+                            <Crown className="w-20 h-20 text-yellow-500 mb-6" />
+                            <div className="grid grid-cols-3 gap-12 text-center mb-12">
+                                <div><div className="text-6xl font-black text-white">{wpm}</div><div className="text-slate-500 uppercase tracking-widest text-sm">WPM</div></div>
+                                <div><div className="text-6xl font-black text-green-400">{accuracy}%</div><div className="text-slate-500 uppercase tracking-widest text-sm">ACC</div></div>
+                                <div><div className="text-6xl font-black text-red-400">{mistakes}</div><div className="text-slate-500 uppercase tracking-widest text-sm">ERR</div></div>
+                            </div>
+                            <button onClick={reset} className="btn-primary"><RotateCcw className="w-4 h-4 mr-2" /> Restart Test</button>
+                        </div>
+                    )}
+
+                    {/* Text Area */}
+                    <div className={`text-2xl font-mono leading-relaxed transition-opacity ${isActive ? 'opacity-100' : 'opacity-60'}`}>
+                        {text.split('').map((char, i) => {
+                            let color = "text-slate-600"
+                            if (i < charIndex) color = "text-white"
+                            if (i < charIndex && text[i] !== char /* Simplified here, ideally track user input array */) {
+                                // We actually need to track what user TYPED to show errors red
+                                // For this simplified version, let's just show cursor
+                            }
+                            return (
+                                <span key={i} className={`${color} ${i === charIndex ? 'border-b-2 border-primary text-white animate-pulse' : ''}`}>{char}</span>
+                            )
+                        })}
+                    </div>
+                </div>
+            )}
+
+            {/* Global Styles for Utility Classes */}
+            <style jsx>{`
+                .nav-btn {
+                    @apply flex items-center gap-2 px-8 py-3 rounded-full font-bold text-slate-500 transition-all hover:bg-white/5;
+                }
+                .active-test {
+                    @apply bg-white text-black shadow-[0_0_20px_rgba(255,255,255,0.3)] scale-105;
+                }
+                .active-arcade {
+                    @apply bg-gradient-to-r from-purple-600 to-cyan-500 text-white shadow-[0_0_20px_rgba(168,85,247,0.4)] scale-105;
+                }
+                .btn-primary {
+                    @apply flex items-center bg-white text-black font-bold px-8 py-3 rounded-xl hover:scale-105 transition-transform;
+                }
+                .btn-secondary {
+                    @apply flex items-center bg-transparent border border-white/20 text-white font-bold px-8 py-3 rounded-xl hover:bg-white/10 transition-colors;
+                }
+                .badge-purple {
+                    @apply text-[10px] font-bold uppercase tracking-widest bg-purple-500/20 text-purple-300 px-2 py-1 rounded border border-purple-500/30;
+                }
+                .badge-cyan {
+                    @apply text-[10px] font-bold uppercase tracking-widest bg-cyan-500/20 text-cyan-300 px-2 py-1 rounded border border-cyan-500/30;
+                }
+            `}</style>
         </div>
     )
 }
