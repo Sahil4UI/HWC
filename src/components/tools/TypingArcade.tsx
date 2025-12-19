@@ -225,6 +225,11 @@ export function TypingArcade() {
                 .game-tag { @apply text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded border; }
                 .btn-primary { @apply flex items-center bg-white text-black font-bold px-8 py-3 rounded-xl hover:scale-105 transition-transform; }
                 .btn-secondary { @apply flex items-center bg-transparent border border-white/20 text-white font-bold px-8 py-3 rounded-xl hover:bg-white/10 transition-colors; }
+                .bg-grid-pattern {
+                    background-image: linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
+                                      linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px);
+                    background-size: 40px 40px;
+                }
             `}</style>
 
             <div className="w-full">
@@ -268,7 +273,7 @@ export function TypingArcade() {
                     </div>
                 ) : (
                     // Active Game Canvas
-                    <div className={`relative h-[600px] w-full bg-[#050505] rounded-3xl border-2 overflow-hidden shadow-2xl transition-colors
+                    <div className={`relative h-[600px] w-full bg-[#050505] rounded-3xl border-2 overflow-hidden shadow-2xl transition-colors bg-grid-pattern
                         ${selectedGame === 'GLYPH_HUNTER' ? 'border-green-500/20' :
                             selectedGame === 'BIT_BOSS' ? 'border-red-500/20' :
                                 selectedGame === 'COSMIC_ZEN' ? 'border-indigo-500/20' : 'border-white/10'}`}>
@@ -282,7 +287,7 @@ export function TypingArcade() {
                             autoFocus
                         />
 
-                        {/* Background FX based on Mode */}
+                        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/80 pointer-events-none"></div>
                         {selectedGame === 'COSMIC_ZEN' && <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 animate-pulse"></div>}
 
                         {/* HUD */}
@@ -336,38 +341,38 @@ export function TypingArcade() {
                         {entities.map(e => (
                             <div
                                 key={e.id}
-                                className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-75"
+                                className="absolute transform -translate-x-1/2 -translate-y-1/2 transition-transform duration-75 text-center"
                                 style={{ left: `${e.x}%`, top: `${e.y}%` }}
                             >
                                 {selectedGame === 'NEON_RUSH' && (
-                                    <div className="relative flex items-center justify-center transform" style={{ opacity: e.life / 100, scale: `${0.5 + (e.life / 200)}` }}>
+                                    <div className="relative flex items-center justify-center transform" style={{ opacity: e.life / 100, scale: `${0.7 + (e.life / 150)}` }}>
                                         <div className="absolute inset-0 bg-cyan-500 blur-xl opacity-50"></div>
-                                        <div className="relative bg-black border-2 border-cyan-400 text-cyan-400 font-mono font-bold text-xl px-4 py-2 rounded-full shadow-[0_0_30px_rgba(34,211,238,0.5)]">
+                                        <div className="relative bg-black border-2 border-cyan-400 text-cyan-400 font-mono font-black text-2xl px-5 py-3 rounded-full shadow-[0_0_30px_rgba(34,211,238,0.5)]">
                                             {e.text}
                                         </div>
                                     </div>
                                 )}
 
                                 {selectedGame === 'GLYPH_HUNTER' && (
-                                    <div className="font-black text-4xl text-white bg-black/40 border-2 border-green-500 w-16 h-16 rounded-full flex items-center justify-center shadow-[0_0_20px_rgba(34,197,94,0.6)]">
+                                    <div className="font-black text-5xl text-white bg-black/40 border-4 border-green-500 w-24 h-24 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(34,197,94,0.6)] animate-pulse">
                                         {e.text}
                                     </div>
                                 )}
 
                                 {selectedGame === 'BIT_BOSS' && (
-                                    <div className="font-mono font-bold text-sm text-red-200 bg-red-950/80 border border-red-500 px-3 py-1 rounded-none shadow-[0_0_15px_rgba(239,68,68,0.4)] flex items-center gap-2">
-                                        <Flame className="w-4 h-4 text-red-500" /> {e.text}
+                                    <div className="font-mono font-bold text-lg text-white bg-red-950/90 border-2 border-red-500 px-4 py-2 rounded-none shadow-[0_0_20px_rgba(239,68,68,0.5)] flex items-center gap-2">
+                                        <Flame className="w-5 h-5 text-red-500 animate-bounce" /> {e.text}
                                     </div>
                                 )}
 
                                 {selectedGame === 'COSMIC_ZEN' && (
-                                    <div className="font-sans font-medium text-2xl text-indigo-300 drop-shadow-[0_0_10px_rgba(165,180,252,0.8)] tracking-widest">
+                                    <div className="font-sans font-medium text-3xl text-indigo-300 drop-shadow-[0_0_15px_rgba(165,180,252,1)] tracking-widest bg-black/20 backdrop-blur px-4 py-1 rounded-full border border-indigo-500/20">
                                         {e.text}
                                     </div>
                                 )}
 
                                 {(selectedGame === 'CYBER_DEFENSE' || !selectedGame) && (
-                                    <div className="font-mono font-bold text-lg text-white bg-black/80 border border-purple-500 px-3 py-1 rounded shadow-[0_0_15px_rgba(168,85,247,0.6)]">
+                                    <div className="font-mono font-black text-xl text-white bg-black/80 border-2 border-purple-500 px-4 py-2 rounded shadow-[0_0_20px_rgba(168,85,247,0.8)]">
                                         <span className="text-purple-400 mr-2">☠</span>{e.text}
                                     </div>
                                 )}
@@ -384,11 +389,15 @@ export function TypingArcade() {
                         {/* Player Input Display */}
                         {!isFinished && (
                             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-20">
-                                <div className={`backdrop-blur border px-8 py-3 rounded-xl text-2xl font-mono font-bold text-white uppercase tracking-widest min-w-[200px] text-center shadow-2xl transition-colors
-                                    ${selectedGame === 'GLYPH_HUNTER' ? 'bg-green-900/40 border-green-500/30' :
-                                        selectedGame === 'BIT_BOSS' ? 'bg-red-900/40 border-red-500/30' :
-                                            'bg-black/50 border-white/20'}`}>
-                                    {gameInput || <span className="opacity-30 text-base">TYPE TO SHOOT</span>}
+                                <div className={`backdrop-blur border-2 px-10 py-4 rounded-2xl text-3xl font-mono font-black text-white uppercase tracking-widest min-w-[300px] text-center shadow-[0_0_50px_rgba(0,0,0,0.8)] transition-colors
+                                    ${selectedGame === 'GLYPH_HUNTER' ? 'bg-green-900/60 border-green-400 shadow-[0_0_30px_rgba(74,222,128,0.2)]' :
+                                        selectedGame === 'BIT_BOSS' ? 'bg-red-900/60 border-red-500 shadow-[0_0_30px_rgba(239,68,68,0.2)]' :
+                                            'bg-black/80 border-white/40 shadow-[0_0_30px_rgba(255,255,255,0.1)]'}`}>
+                                    {gameInput ? (
+                                        <span className="drop-shadow-md">{gameInput}</span>
+                                    ) : (
+                                        <span className="opacity-30 text-lg animate-pulse">TYPE TO SHOOT</span>
+                                    )}
                                 </div>
                             </div>
                         )}
