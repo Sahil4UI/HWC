@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { AlertTriangle, Terminal, RefreshCw, Wand2, SplitSquareHorizontal, Calculator, BookOpen, Code2, RotateCcw, FileQuestion, Database, Sparkles, ArrowRight, FileSpreadsheet, FileText, Mic, Calendar, Keyboard, Search, Grid, Layers, GraduationCap } from "lucide-react"
+import { AlertTriangle, Terminal, RefreshCw, Wand2, SplitSquareHorizontal, Calculator, BookOpen, Code2, RotateCcw, FileQuestion, Database, Sparkles, ArrowRight, FileSpreadsheet, FileText, Mic, Calendar, Keyboard, Search, Grid, Layers, GraduationCap, Gamepad2 } from "lucide-react"
 import { Navbar } from "@/components/layout/Navbar"
 import { ParticleBackground } from "@/components/ui/ParticleBackground"
 import Link from "next/link"
